@@ -10,7 +10,7 @@ const nodemailer = require('nodemailer');
 
 const apiKey = process.env.STRIPE_SECRET_KEY;
 if (!apiKey) {
-    console.error("\n❌ STRIPE ERROR: STRIPE_SECRET_KEY is missing!\n");
+    console.error("\n❌ STRIPE ERROR: STRIPE_SECRET_KEY environment variable is missing!\n");
     process.exit(1);
 }
 
@@ -18,9 +18,9 @@ const stripe = require('stripe')(apiKey);
 
 const app = express();
 
-// Production Security Headers & Response Compression
+// Security Headers & Response Compression
 app.use(helmet({
-    contentSecurityPolicy: false, // Configured via custom meta tag in index.html for SPA compatibility
+    contentSecurityPolicy: false,
 }));
 app.use(compression());
 app.use(express.json());
@@ -37,7 +37,7 @@ const transporter = nodemailer.createTransport({
     },
 });
 
-// Health Check Endpoint for Production Monitoring
+// Health Check Endpoint for Monitoring
 app.get('/api/health', (req, res) => {
     res.status(200).json({
         status: 'UP',
@@ -46,9 +46,12 @@ app.get('/api/health', (req, res) => {
     });
 });
 
-// 1. Stripe Checkout Endpoint (Supports Multi-Currency)
+// 1. Stripe Checkout Endpoint (Dynamic Host Resolution)
 app.post('/create-checkout-session', async (req, res) => {
     const { items, currency = 'eur' } = req.body;
+
+    // Dynamically resolve domain from environment variable or request protocol/host
+    const origin = process.env.DOMAIN || `${req.protocol}://${req.get('host')}`;
 
     const lineItems = items.map(item => {
         const itemData = {
@@ -73,8 +76,8 @@ app.post('/create-checkout-session', async (req, res) => {
         const session = await stripe.checkout.sessions.create({
             line_items: lineItems,
             mode: 'payment',
-            success_url: 'http://localhost:3000/index.html?session_id={CHECKOUT_SESSION_ID}',
-            cancel_url: 'http://localhost:3000/index.html?canceled=true',
+            success_url: `${origin}/index.html?session_id={CHECKOUT_SESSION_ID}`,
+            cancel_url: `${origin}/index.html?canceled=true`,
         });
 
         res.json({ url: session.url });
@@ -152,10 +155,13 @@ app.get('/index_:lang.html', (req, res) => {
     res.sendFile(path.join(__dirname, '../index.html'));
 });
 
-// Serve static assets with max-age caching in production
+// Serve static assets
 app.use(express.static(path.join(__dirname, '..'), {
     maxAge: '1d'
 }));
 
+// Port Binding (Standard Port Listening for Render)
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => console.log(`Aabora server running on http://localhost:${PORT}`));
+app.listen(PORT, () => {
+    console.log(`Aabora server running on port ${PORT}`);
+});
