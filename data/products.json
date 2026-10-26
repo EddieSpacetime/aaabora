@@ -1,0 +1,50 @@
+[
+  {
+    "id": "prod-1",
+    "category": "rings",
+    "price": 240.00,
+    "image": "assets/images/products/ring-1.jpg",
+    "name": {
+      "en": "Organic Gold Ring",
+      "el": "Οργανικό Χρυσό Δαχτυλίδι",
+      "it": "Anello in Oro Organico"
+    },
+    "description": {
+      "en": "Handcrafted with raw organic textures in 14k gold.",
+      "el": "Χειροποίητο με ακατέργαστες οργανικές υφές σε χρυσό 14k.",
+      "it": "Realizzato a mano con trame organiche grezze in oro 14k."
+    }
+  },
+  {
+    "id": "prod-2",
+    "category": "necklaces",
+    "price": 320.00,
+    "image": "assets/images/products/necklace-1.jpg",
+    "name": {
+      "en": "Mineral Pendant Necklace",
+      "el": "Κολιέ με Ορυκτό Μεταλλικό Πρότυπο",
+      "it": "Collana con Pendente Minerale"
+    },
+    "description": {
+      "en": "Featuring a raw gemstone set in a textured precious metal pendant.",
+      "el": "Διαθέτει ακατέργαστο πολύτιμο λίθο σε ανάγλυφο περίβλημα.",
+      "it": "Caratterizzato da una pietra preziosa grezza incastonata."
+    }
+  },
+  {
+    "id": "prod-3",
+    "category": "earrings",
+    "price": 180.00,
+    "image": "assets/images/products/earrings-1.jpg",
+    "name": {
+      "en": "Textured Leaf Earrings",
+      "el": "Ανάγλυφα Σκουλαρίκια Φύλλου",
+      "it": "Orecchini a Foglia Testurizzati"
+    },
+    "description": {
+      "en": "Delicate drops inspired by natural foliage patterns.",
+      "el": "Λεπτά κρεμαστά σκουλαρίκια εμπνευσμένα από μοτίβα της φύσης.",
+      "it": "Delicati pendenti ispirati ai motivi del fogliame naturale."
+    }
+  }
+]

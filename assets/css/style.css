@@ -1,0 +1,42 @@
+/* Base Layout & Custom Helper Styles */
+.hero-watermark {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 60%;
+    max-width: 600px;
+    opacity: 0.04;
+    pointer-events: none;
+}
+
+.btn-primary-luxury {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    background-color: #1c1b1a;
+    color: #fbfbfa;
+    padding: 0.875rem 2rem;
+    font-size: 0.75rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    border-radius: 0.25rem;
+    transition: all 0.3s ease;
+}
+
+.btn-primary-luxury:hover {
+    background-color: #2c2a29;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+}
+
+/* Toast Notification Luxury Styling & Transitions */
+#toast-container {
+    max-width: 360px;
+    width: calc(100% - 3rem);
+}
+
+.toast-notification {
+    backdrop-filter: blur(8px);
+    box-shadow: 0 20px 25px -5px rgba(28, 27, 26, 0.25), 0 8px 10px -6px rgba(28, 27, 26, 0.2);
+}

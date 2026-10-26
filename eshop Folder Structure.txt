@@ -1,0 +1,18 @@
+aabora-eshop/
+│
+├── index.html              # Your main storefront file
+├── README.md               # Project notes & instructions
+│
+├── assets/                 # Folder for all media & styling
+│   ├── images/             # Product photos, hero banners, logos
+│   │   ├── ring-1.jpg
+│   │   ├── necklace-1.jpg
+│   │   └── hero-bg.jpg
+│   ├── css/                # Custom stylesheets (if you split Tailwind out later)
+│   │   └── style.css
+│   └── js/                 # JavaScript components/database (if you split logic out)
+│       ├── products.js     # Product array data
+│       └── translations.js # English, Greek, Italian translation dictionaries
+│
+└── server/                 # (Optional) Future backend if you add real payments/database
+    └── server.js           # Node.js or Python server file

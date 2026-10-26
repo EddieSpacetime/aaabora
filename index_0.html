@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aabora | Handcrafted Fine Jewelry</title>
+    
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: { 50: '#fbfbfa', 100: '#f4f3f0', 200: '#e5e3de', 800: '#2c2a29', 900: '#1c1b1a' }
+                    },
+                    fontFamily: { serif: ['Playfair Display', 'serif'], sans: ['Inter', 'sans-serif'] }
+                }
+            }
+        }
+    </script>
+    
+    <!-- Google Fonts & FontAwesome -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Custom Stylesheets -->
+    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="assets/css/navbar.css">
+</head>
+<body class="bg-brand-50 text-brand-900 font-sans antialiased selection:bg-brand-200">
+
+    <!-- Top Announcement Bar -->
+    <div class="bg-brand-900 text-brand-50 text-xs py-2 px-4 text-center tracking-widest uppercase font-light">
+        <span data-i18n="announcement">Free Worldwide Shipping on Orders Over €150</span>
+    </div>
+
+    <!-- Navigation Header -->
+    <header class="sticky top-0 z-40 bg-brand-50/95 backdrop-blur-md border-b border-brand-200">
+        <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+            
+            <!-- Mobile Menu Trigger -->
+            <button id="mobile-menu-btn" class="md:hidden text-brand-900 focus:outline-none">
+                <i class="fa-solid fa-bars text-lg"></i>
+            </button>
+
+            <!-- Brand Logo -->
+            <a href="index.html" class="flex items-center">
+                <img src="assets/images/logo.png" alt="Aabora Logo" class="h-12 md:h-16 w-auto object-contain hover:opacity-90 transition">
+            </a>
+
+            <!-- Desktop Nav Links -->
+            <nav class="hidden md:flex items-center space-x-8 text-xs font-medium uppercase tracking-widest">
+			<a href="#shop" class="hover:text-stone-500 transition" data-i18n="nav_shop">Shop</a>
+			<a href="#story" class="hover:text-stone-500 transition" data-i18n="nav_story">Our Story</a>
+			<button id="open-bespoke-modal" class="hover:text-stone-500 transition uppercase tracking-widest" data-i18n="nav_bespoke">Bespoke</button>
+			</nav>
+
+            <!-- Language & Action Controls -->
+            <div class="flex items-center space-x-5">
+                <!-- Dynamic Language Selector (managed by i18n.js) -->
+                <select id="language-select" class="bg-transparent text-xs uppercase font-medium tracking-wider focus:outline-none cursor-pointer border border-brand-200 rounded px-2 py-1">
+                    <option value="en">🇬🇧 ENG</option>
+                    <option value="el">🇬🇷 EL</option>
+                    <option value="it">🇮🇹 ITA</option>
+                </select>
+
+                <!-- Wishlist Button -->
+                <button id="wishlist-btn" class="relative text-brand-900 hover:text-stone-600 transition">
+                    <i class="fa-regular fa-heart text-lg"></i>
+                    <span id="wishlist-badge" class="absolute -top-2 -right-2 bg-brand-900 text-brand-50 text-[10px] w-4 h-4 rounded-full flex items-center justify-center hidden">0</span>
+                </button>
+
+                <!-- Cart Button -->
+                <button id="cart-btn" class="relative text-brand-900 hover:text-stone-600 transition">
+                    <i class="fa-solid fa-bag-shopping text-lg"></i>
+                    <span id="cart-badge" class="absolute -top-2 -right-2 bg-brand-900 text-brand-50 text-[10px] w-4 h-4 rounded-full flex items-center justify-center hidden">0</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="relative bg-brand-100 py-20 md:py-28 border-b border-brand-200 overflow-hidden">
+        <img src="assets/images/logo.png" alt="" class="hero-watermark select-none">
+        <div class="relative z-10 max-w-4xl mx-auto px-6 text-center">
+            <h1 class="font-serif text-4xl md:text-6xl font-normal tracking-wide mb-6 leading-tight" data-i18n="hero_title">
+                Handcrafted Fine Jewelry Inspired by Nature
+            </h1>
+            <p class="text-stone-600 text-sm md:text-base max-w-xl mx-auto mb-10 leading-relaxed font-light" data-i18n="hero_subtitle">
+                Each piece is meticulously sculpted by hand, embedding timeless organic textures into precious metals and raw gemstones.
+            </p>
+            <a href="#shop" class="btn-primary-luxury">
+                <span data-i18n="hero_cta">Explore Collection</span>
+                <i class="fa-solid fa-arrow-right text-xs"></i>
+            </a>
+        </div>
+    </section>
+
+    <!-- Catalog Section -->
+    <main id="shop" class="max-w-7xl mx-auto px-6 py-20">
+        <div class="flex flex-col md:flex-row md:items-end justify-between mb-12 border-b border-brand-200 pb-6">
+            <div>
+                <p class="text-xs uppercase tracking-widest text-stone-500 mb-2" data-i18n="catalog_tag">Curated Pieces</p>
+                <h2 class="font-serif text-3xl font-medium" data-i18n="catalog_title">The Collection</h2>
+            </div>
+            
+            <div class="flex flex-wrap gap-2 mt-6 md:mt-0 text-xs uppercase tracking-wider">
+                <button class="filter-btn bg-brand-900 text-brand-50 px-4 py-2 rounded transition" data-filter="all" data-i18n="filter_all">All</button>
+                <button class="filter-btn bg-brand-100 text-brand-900 px-4 py-2 rounded hover:bg-brand-200 transition" data-filter="rings" data-i18n="filter_rings">Rings</button>
+                <button class="filter-btn bg-brand-100 text-brand-900 px-4 py-2 rounded hover:bg-brand-200 transition" data-filter="necklaces" data-i18n="filter_necklaces">Necklaces</button>
+                <button class="filter-btn bg-brand-100 text-brand-900 px-4 py-2 rounded hover:bg-brand-200 transition" data-filter="earrings" data-i18n="filter_earrings">Earrings</button>
+            </div>
+        </div>
+
+        <!-- Dynamic Product Target -->
+        <div id="product-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8"></div>
+    </main>
+
+    <!-- Cart Drawer Modal -->
+    <div id="cart-drawer" class="fixed inset-0 z-50 overflow-hidden hidden">
+        <div class="absolute inset-0 bg-brand-900/40 backdrop-blur-sm transition-opacity"></div>
+        <div class="absolute inset-y-0 right-0 max-w-full flex pl-10">
+            <div class="w-screen max-w-md bg-brand-50 shadow-2xl flex flex-col justify-between border-l border-brand-200">
+                <div class="p-6 border-b border-brand-200 flex items-center justify-between">
+                    <h3 class="font-serif text-xl font-medium" data-i18n="cart_title">Your Shopping Bag</h3>
+                    <button id="close-cart" class="text-stone-400 hover:text-brand-900 transition p-2"><i class="fa-solid fa-xmark text-lg"></i></button>
+                </div>
+                <div id="cart-items" class="p-6 overflow-y-auto flex-grow space-y-4"></div>
+                <div class="p-6 border-t border-brand-200 bg-brand-100/50">
+                    <div class="flex items-center justify-between mb-4 text-sm">
+                        <span class="font-serif font-medium uppercase tracking-wider text-xs" data-i18n="cart_subtotal">Subtotal:</span>
+                        <span id="cart-subtotal-price" class="font-serif text-lg font-semibold">€0.00</span>
+                    </div>
+                    <button class="w-full bg-brand-900 text-brand-50 py-4 text-xs font-semibold tracking-widest uppercase hover:bg-brand-800 transition shadow-md" data-i18n="cart_checkout">Proceed to Checkout</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Wishlist Drawer Modal -->
+    <div id="wishlist-drawer" class="fixed inset-0 z-50 overflow-hidden hidden">
+        <div class="absolute inset-0 bg-brand-900/40 backdrop-blur-sm transition-opacity"></div>
+        <div class="absolute inset-y-0 right-0 max-w-full flex pl-10">
+            <div class="w-screen max-w-md bg-brand-50 shadow-2xl flex flex-col justify-between border-l border-brand-200">
+                <div class="p-6 border-b border-brand-200 flex items-center justify-between">
+                    <h3 class="font-serif text-xl font-medium" data-i18n="wishlist_title">Your Wishlist</h3>
+                    <button id="close-wishlist" class="text-stone-400 hover:text-brand-900 transition p-2"><i class="fa-solid fa-xmark text-lg"></i></button>
+                </div>
+                <div id="wishlist-items" class="p-6 overflow-y-auto flex-grow space-y-4"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-brand-900 text-brand-50 py-12 border-t border-brand-800">
+        <div class="max-w-7xl mx-auto px-6 flex flex-col items-center justify-center space-y-4">
+            <img src="assets/images/logo.png" alt="Aabora Logo" class="h-10 w-auto brightness-200 opacity-80">
+            <div class="text-xs text-stone-500">
+                &copy; 2026 Aabora Jewelry. All rights reserved.
+            </div>
+        </div>
+    </footer>
+
+    <!-- Floating Toast Notification Container -->
+    <div id="toast-container" class="fixed bottom-6 right-6 z-50 flex flex-col space-y-3 pointer-events-none"></div>
+
+    <!-- Modern Modular Logic Scripts -->
+    <script src="assets/js/i18n.js"></script>
+    <script src="assets/js/products.js"></script>
+    <script src="assets/js/app.js"></script>
+	
+	
+	<!-- Bespoke Commission Modal -->
+    <div id="bespoke-modal" class="fixed inset-0 z-50 flex items-center justify-center hidden">
+        <div class="absolute inset-0 bg-brand-900/50 backdrop-blur-sm transition-opacity"></div>
+        <div class="relative bg-brand-50 w-full max-w-lg mx-4 rounded-lg shadow-2xl border border-brand-200 p-8 z-10 max-h-[90vh] overflow-y-auto">
+            <button id="close-bespoke-modal" class="absolute top-4 right-4 text-stone-400 hover:text-brand-900 transition p-2">
+                <i class="fa-solid fa-xmark text-lg"></i>
+            </button>
+            
+            <div class="text-center mb-6">
+                <h3 class="font-serif text-2xl font-medium text-brand-900" data-i18n="bespoke_modal_title">Bespoke Jewelry Commission</h3>
+                <p class="text-xs text-stone-500 mt-2 font-light" data-i18n="bespoke_modal_subtitle">Collaborate with our master artisans to bring your vision to life.</p>
+            </div>
+
+            <form id="bespoke-form" class="space-y-4">
+                <div>
+                    <label class="block text-xs uppercase tracking-wider font-medium text-brand-900 mb-1" data-i18n="bespoke_name_label">Your Name</label>
+                    <input type="text" id="bespoke-name" required class="w-full bg-brand-100 border border-brand-200 rounded px-3 py-2 text-xs focus:outline-none focus:border-brand-900">
+                </div>
+
+                <div>
+                    <label class="block text-xs uppercase tracking-wider font-medium text-brand-900 mb-1" data-i18n="bespoke_email_label">Email Address</label>
+                    <input type="email" id="bespoke-email" required class="w-full bg-brand-100 border border-brand-200 rounded px-3 py-2 text-xs focus:outline-none focus:border-brand-900">
+                </div>
+
+                <div>
+                    <label class="block text-xs uppercase tracking-wider font-medium text-brand-900 mb-1" data-i18n="bespoke_metal_label">Preferred Precious Metal</label>
+                    <select id="bespoke-metal" class="w-full bg-brand-100 border border-brand-200 rounded px-3 py-2 text-xs focus:outline-none focus:border-brand-900">
+                        <option value="18k-gold" data-i18n="bespoke_metal_gold">18k Yellow Gold</option>
+                        <option value="18k-white-gold" data-i18n="bespoke_metal_white_gold">18k White Gold</option>
+                        <option value="925-silver" data-i18n="bespoke_metal_silver">925 Sterling Silver</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label class="block text-xs uppercase tracking-wider font-medium text-brand-900 mb-1" data-i18n="bespoke_budget_label">Estimated Budget</label>
+                    <input type="text" id="bespoke-budget" placeholder="e.g. €500 - €1,500" class="w-full bg-brand-100 border border-brand-200 rounded px-3 py-2 text-xs focus:outline-none focus:border-brand-900">
+                </div>
+
+                <div>
+                    <label class="block text-xs uppercase tracking-wider font-medium text-brand-900 mb-1" data-i18n="bespoke_notes_label">Design Notes & Ideas</label>
+                    <textarea id="bespoke-notes" rows="4" required class="w-full bg-brand-100 border border-brand-200 rounded px-3 py-2 text-xs focus:outline-none focus:border-brand-900 resize-none"></textarea>
+                </div>
+
+                <button type="submit" class="w-full bg-brand-900 text-brand-50 py-3 text-xs font-semibold tracking-widest uppercase hover:bg-brand-800 transition shadow-md mt-4" data-i18n="bespoke_submit_btn">
+                    Submit Inquiry
+                </button>
+            </form>
+        </div>
+    </div>
+</body>
+</html>
