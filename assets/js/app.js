@@ -120,7 +120,6 @@ class AppController {
                 this.openQuickView(productId);
             }
 
-            // Remove item or clear cart actions
             const removeBtn = e.target.closest('.remove-cart-item');
             if (removeBtn) {
                 const productId = removeBtn.getAttribute('data-id');
@@ -525,7 +524,8 @@ class AppController {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ 
                     items: checkoutItems,
-                    currency: this.currentCurrency 
+                    currency: this.currentCurrency,
+                    lang: currentLang // 👈 Trilingual success handling
                 })
             });
 
@@ -572,6 +572,10 @@ class AppController {
 }
 
 const appController = new AppController();
-document.addEventListener('DOMContentLoaded', () => {
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', () => {
+        appController.init();
+    });
+} else {
     appController.init();
-});
+}

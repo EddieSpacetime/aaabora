@@ -23,7 +23,7 @@ const ROOT_DIR = fs.existsSync(path.join(__dirname, 'index.html'))
     ? __dirname
     : path.resolve(__dirname, '..');
 
-// 🚀 1. FIRST-PRIORITY INTERCEPTOR FOR SUCCESS PAGE (Trilingual Support: EN, EL, IT)
+// 🚀 1. FIRST-PRIORITY INTERCEPTOR FOR SUCCESS PAGE (Trilingual Support: EN, IT, EL)
 app.get(['/success.html', '/success'], (req, res) => {
     const lang = (req.query.lang || 'el').toLowerCase();
 
@@ -64,7 +64,6 @@ app.get(['/success.html', '/success'], (req, res) => {
         }
     };
 
-    // Fallback to Greek if language code is unmapped
     const t = content[lang] || content.el;
 
     res.setHeader('Content-Type', 'text/html; charset=utf-8');
@@ -161,7 +160,6 @@ function ensureAbsoluteUrl(rawUrl, baseUrl) {
 app.post('/create-checkout-session', async (req, res) => {
     const { items, currency = 'eur', lang = 'el' } = req.body;
     
-    // Determine strict absolute origin with auto-cleaning
     let rawOrigin = process.env.DOMAIN || `${req.protocol}://${req.get('host')}`;
     rawOrigin = rawOrigin.replace(/^domain=/i, '').trim();
 
