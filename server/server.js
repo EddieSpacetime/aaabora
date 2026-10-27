@@ -40,14 +40,8 @@ const transporter = nodemailer.createTransport({
     },
 });
 
-// Explicit Route for success.html (Placed before static/SPA middleware)
+// Self-Contained Explicit Route for success.html (Guaranteed 200 OK)
 app.get('/success.html', (req, res) => {
-    const successPath = path.join(ROOT_DIR, 'success.html');
-    if (fs.existsSync(successPath)) {
-        return res.sendFile(successPath);
-    }
-
-    // Direct HTML Fallback if success.html is missing on disk
     res.setHeader('Content-Type', 'text/html; charset=utf-8');
     res.status(200).send(`
         <!DOCTYPE html>
@@ -57,13 +51,38 @@ app.get('/success.html', (req, res) => {
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
             <title>Επιτυχής Παραγγελία · Aabora</title>
             <script src="https://cdn.tailwindcss.com"></script>
+            <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+            <style>
+                body { font-family: 'Inter', sans-serif; }
+                .font-cinzel { font-family: 'Cinzel', serif; }
+            </style>
         </head>
-        <body class="bg-stone-50 text-stone-800 min-h-screen flex items-center justify-center p-4">
-            <div class="max-w-md w-full bg-white p-8 rounded-lg shadow-sm border border-stone-200 text-center">
-                <h1 class="text-2xl font-bold text-stone-900 mb-2">Ευχαριστούμε για την Παραγγελία σας!</h1>
-                <p class="text-stone-600 text-sm mb-6">Η πληρωμή σας ολοκληρώθηκε με επιτυχία. Ένα email επιβεβαίωσης θα αποσταλεί σύντομα.</p>
-                <a href="/" class="block w-full bg-stone-900 text-white py-3 rounded text-sm uppercase tracking-wider font-medium hover:bg-stone-800 transition">Επιστροφή στο Κατάστημα</a>
-            </div>
+        <body class="bg-stone-50 text-stone-800 min-h-screen flex flex-col justify-between">
+            <header class="bg-white border-b border-stone-200 py-4 px-6 text-center">
+                <a href="/" class="font-cinzel text-2xl tracking-widest font-bold text-stone-900 uppercase">AABORA</a>
+            </header>
+            <main class="flex-grow flex items-center justify-center px-4 py-16">
+                <div class="max-w-md w-full bg-white p-8 rounded-lg shadow-sm border border-stone-200 text-center">
+                    <div class="w-16 h-16 bg-emerald-50 text-emerald-600 rounded-full flex items-center justify-center mx-auto mb-6 text-2xl">
+                        <i class="fas fa-check"></i>
+                    </div>
+                    <h1 class="font-cinzel text-2xl font-bold text-stone-900 mb-2">Ευχαριστούμε για την Παραγγελία σας!</h1>
+                    <p class="text-stone-600 text-sm mb-6">
+                        Η πληρωμή σας ολοκληρώθηκε με επιτυχία. Ένα email επιβεβαίωσης και λεπτομερειών αποστολής έχει αποσταλεί.
+                    </p>
+                    <div class="border-t border-b border-stone-100 py-4 mb-6 text-left text-xs text-stone-500 space-y-1">
+                        <p><span class="font-semibold text-stone-700">Κατάσταση:</span> Επεξεργάζεται</p>
+                        <p><span class="font-semibold text-stone-700">Μέθοδος:</span> Stripe Secure Checkout</p>
+                    </div>
+                    <a href="/" class="block w-full bg-stone-900 text-white py-3 px-4 rounded text-sm uppercase tracking-wider font-medium hover:bg-stone-800 transition">
+                        Επιστροφή στο Κατάστημα
+                    </a>
+                </div>
+            </main>
+            <footer class="bg-white border-t border-stone-200 py-4 text-center text-xs text-stone-500">
+                © 2026 Aabora. Με επιφύλαξη παντός δικαιώματος.
+            </footer>
         </body>
         </html>
     `);
