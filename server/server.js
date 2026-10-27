@@ -23,27 +23,24 @@ const ROOT_DIR = fs.existsSync(path.join(__dirname, 'index.html'))
     ? __dirname
     : path.resolve(__dirname, '..');
 
-// Security Headers & Response Compression
-app.use(helmet({ contentSecurityPolicy: false }));
-app.use(compression());
-app.use(express.json());
-app.use(cors());
-
-// Configure Transporter for Nodemailer
-const transporter = nodemailer.createTransport({
-    host: process.env.EMAIL_HOST || 'smtp.gmail.com',
-    port: process.env.EMAIL_PORT || 587,
-    secure: false,
-    auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS,
-    },
-});
-
-// Self-Contained Explicit Route for success.html (Guaranteed 200 OK)
+// 🚨 1. FIRST-PRIORITY INTERCEPTOR FOR SUCCESS.HTML (Runs before static/parsers/middleware)
 app.get('/success.html', (req, res) => {
+    // Try sending local success.html file if found
+    const possiblePaths = [
+        path.join(ROOT_DIR, 'success.html'),
+        path.join(__dirname, '../success.html'),
+        path.join(__dirname, 'success.html')
+    ];
+
+    for (const p of possiblePaths) {
+        if (fs.existsSync(p)) {
+            return res.sendFile(p);
+        }
+    }
+
+    // Direct Embedded Fallback (Guarantees 200 OK)
     res.setHeader('Content-Type', 'text/html; charset=utf-8');
-    res.status(200).send(`
+    return res.status(200).send(`
         <!DOCTYPE html>
         <html lang="el">
         <head>
@@ -71,10 +68,6 @@ app.get('/success.html', (req, res) => {
                     <p class="text-stone-600 text-sm mb-6">
                         Η πληρωμή σας ολοκληρώθηκε με επιτυχία. Ένα email επιβεβαίωσης και λεπτομερειών αποστολής έχει αποσταλεί.
                     </p>
-                    <div class="border-t border-b border-stone-100 py-4 mb-6 text-left text-xs text-stone-500 space-y-1">
-                        <p><span class="font-semibold text-stone-700">Κατάσταση:</span> Επεξεργάζεται</p>
-                        <p><span class="font-semibold text-stone-700">Μέθοδος:</span> Stripe Secure Checkout</p>
-                    </div>
                     <a href="/" class="block w-full bg-stone-900 text-white py-3 px-4 rounded text-sm uppercase tracking-wider font-medium hover:bg-stone-800 transition">
                         Επιστροφή στο Κατάστημα
                     </a>
@@ -86,6 +79,23 @@ app.get('/success.html', (req, res) => {
         </body>
         </html>
     `);
+});
+
+// Security Headers & Response Compression
+app.use(helmet({ contentSecurityPolicy: false }));
+app.use(compression());
+app.use(express.json());
+app.use(cors());
+
+// Configure Transporter for Nodemailer
+const transporter = nodemailer.createTransport({
+    host: process.env.EMAIL_HOST || 'smtp.gmail.com',
+    port: process.env.EMAIL_PORT || 587,
+    secure: false,
+    auth: {
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS,
+    },
 });
 
 // Health Check Endpoint
