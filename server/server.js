@@ -40,6 +40,35 @@ const transporter = nodemailer.createTransport({
     },
 });
 
+// Explicit Route for success.html (Placed before static/SPA middleware)
+app.get('/success.html', (req, res) => {
+    const successPath = path.join(ROOT_DIR, 'success.html');
+    if (fs.existsSync(successPath)) {
+        return res.sendFile(successPath);
+    }
+
+    // Direct HTML Fallback if success.html is missing on disk
+    res.setHeader('Content-Type', 'text/html; charset=utf-8');
+    res.status(200).send(`
+        <!DOCTYPE html>
+        <html lang="el">
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>Επιτυχής Παραγγελία · Aabora</title>
+            <script src="https://cdn.tailwindcss.com"></script>
+        </head>
+        <body class="bg-stone-50 text-stone-800 min-h-screen flex items-center justify-center p-4">
+            <div class="max-w-md w-full bg-white p-8 rounded-lg shadow-sm border border-stone-200 text-center">
+                <h1 class="text-2xl font-bold text-stone-900 mb-2">Ευχαριστούμε για την Παραγγελία σας!</h1>
+                <p class="text-stone-600 text-sm mb-6">Η πληρωμή σας ολοκληρώθηκε με επιτυχία. Ένα email επιβεβαίωσης θα αποσταλεί σύντομα.</p>
+                <a href="/" class="block w-full bg-stone-900 text-white py-3 rounded text-sm uppercase tracking-wider font-medium hover:bg-stone-800 transition">Επιστροφή στο Κατάστημα</a>
+            </div>
+        </body>
+        </html>
+    `);
+});
+
 // Health Check Endpoint
 app.get('/api/health', (req, res) => {
     res.status(200).json({
@@ -53,8 +82,6 @@ app.get('/api/health', (req, res) => {
 app.post('/create-checkout-session', async (req, res) => {
     const { items, currency = 'eur' } = req.body;
     const origin = process.env.DOMAIN || `${req.protocol}://${req.get('host')}`;
-
-    console.log("🛒 Incoming Checkout Request Items:", JSON.stringify(items, null, 2));
 
     if (!items || !Array.isArray(items) || items.length === 0) {
         return res.status(400).json({ error: 'No items provided in cart.' });
@@ -72,15 +99,13 @@ app.post('/create-checkout-session', async (req, res) => {
 
         const unitAmount = Math.round((isNaN(rawPrice) ? 0 : rawPrice) * 100);
 
-        console.log(`📦 Item: "${item.name || 'Unknown'}" | Raw Price:`, targetPriceVal, `| Unit Amount (cents):`, unitAmount);
-
         const itemData = {
             price_data: {
                 currency: currency.toLowerCase(),
                 product_data: {
                     name: item.name || 'Jewelry Item',
                 },
-                unit_amount: unitAmount > 0 ? unitAmount : 1500, // Fallback to 15.00 if missing
+                unit_amount: unitAmount > 0 ? unitAmount : 1500,
             },
             quantity: parseInt(item.qty || item.quantity || 1, 10),
         };
@@ -96,7 +121,6 @@ app.post('/create-checkout-session', async (req, res) => {
         const session = await stripe.checkout.sessions.create({
             line_items: lineItems,
             mode: 'payment',
-            // payment_method_types removed to comply with latest Stripe API standards
             success_url: `${origin}/success.html?session_id={CHECKOUT_SESSION_ID}`,
             cancel_url: `${origin}/?canceled=true`,
         });
@@ -168,33 +192,6 @@ app.post('/api/bespoke-inquiry', async (req, res) => {
         console.error('Inquiry Processing Error:', error);
         res.status(500).json({ error: 'Failed to process inquiry.' });
     }
-});
-
-// Explicit Route for success.html
-app.get('/success.html', (req, res) => {
-    const successPath = path.join(ROOT_DIR, 'success.html');
-    if (fs.existsSync(successPath)) {
-        return res.sendFile(successPath);
-    }
-    
-    res.send(`
-        <!DOCTYPE html>
-        <html lang="el">
-        <head>
-            <meta charset="UTF-8">
-            <meta name="viewport" content="width=device-width, initial-scale=1.0">
-            <title>Επιτυχής Παραγγελία · Aabora</title>
-            <script src="https://cdn.tailwindcss.com"></script>
-        </head>
-        <body class="bg-stone-50 text-stone-800 min-h-screen flex items-center justify-center p-4">
-            <div class="max-w-md w-full bg-white p-8 rounded-lg shadow-sm border border-stone-200 text-center">
-                <h1 class="text-2xl font-bold text-stone-900 mb-2">Ευχαριστούμε για την Παραγγελία σας!</h1>
-                <p class="text-stone-600 text-sm mb-6">Η πληρωμή σας ολοκληρώθηκε με επιτυχία.</p>
-                <a href="/" class="block w-full bg-stone-900 text-white py-3 rounded text-sm uppercase tracking-wider font-medium">Επιστροφή στο Κατάστημα</a>
-            </div>
-        </body>
-        </html>
-    `);
 });
 
 // Favicon Handler
