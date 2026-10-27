@@ -18,49 +18,13 @@ const stripe = require('stripe')(apiKey);
 
 const app = express();
 
-// Root directory determination
+// Determine absolute project root folder dynamically
 const ROOT_DIR = fs.existsSync(path.join(__dirname, 'index.html'))
     ? __dirname
-    : path.join(__dirname, '..');
-
-// 🚀 TOP-PRIORITY ROUTE: Intercept success.html immediately before anything else
-app.get('/success.html', (req, res) => {
-    const possiblePaths = [
-        path.join(ROOT_DIR, 'success.html'),
-        path.join(__dirname, '../success.html'),
-        path.join(__dirname, 'success.html')
-    ];
-
-    for (const p of possiblePaths) {
-        if (fs.existsSync(p)) {
-            return res.sendFile(p);
-        }
-    }
-
-    // Inline fallback guarantee if file is missing on disk
-    res.send(`
-        <!DOCTYPE html>
-        <html lang="el">
-        <head>
-            <meta charset="UTF-8">
-            <title>Επιτυχής Παραγγελία · Aabora</title>
-            <script src="https://cdn.tailwindcss.com"></script>
-        </head>
-        <body class="bg-stone-50 text-stone-800 min-h-screen flex items-center justify-center">
-            <div class="max-w-md w-full bg-white p-8 rounded shadow text-center">
-                <h1 class="text-2xl font-bold mb-2">Ευχαριστούμε για την Παραγγελία σας!</h1>
-                <p class="text-stone-600 text-sm mb-6">Η πληρωμή σας ολοκληρώθηκε με επιτυχία.</p>
-                <a href="/" class="block w-full bg-stone-900 text-white py-3 rounded text-sm uppercase">Επιστροφή στο Κατάστημα</a>
-            </div>
-        </body>
-        </html>
-    `);
-});
+    : path.resolve(__dirname, '..');
 
 // Security Headers & Response Compression
-app.use(helmet({
-    contentSecurityPolicy: false,
-}));
+app.use(helmet({ contentSecurityPolicy: false }));
 app.use(compression());
 app.use(express.json());
 app.use(cors());
@@ -94,9 +58,7 @@ app.post('/create-checkout-session', async (req, res) => {
         const itemData = {
             price_data: {
                 currency: currency.toLowerCase(),
-                product_data: {
-                    name: item.name,
-                },
+                product_data: { name: item.name },
                 unit_amount: Math.round(item.price * 100),
             },
             quantity: item.qty,
@@ -179,7 +141,6 @@ app.post('/api/bespoke-inquiry', async (req, res) => {
             await transporter.sendMail(mailOptions);
         }
 
-        console.log(`\n📥 Bespoke Inquiry Saved for ${name} (${email})`);
         res.status(200).json({ success: true, message: 'Inquiry received successfully.' });
     } catch (error) {
         console.error('Inquiry Processing Error:', error);
@@ -187,14 +148,41 @@ app.post('/api/bespoke-inquiry', async (req, res) => {
     }
 });
 
-// Explicit Favicon Route Handler
+// Explicit Route for success.html
+app.get('/success.html', (req, res) => {
+    const successPath = path.join(ROOT_DIR, 'success.html');
+    if (fs.existsSync(successPath)) {
+        return res.sendFile(successPath);
+    }
+    
+    // Direct Fallback render if file lookup fails in container
+    res.send(`
+        <!DOCTYPE html>
+        <html lang="el">
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>Επιτυχής Παραγγελία · Aabora</title>
+            <script src="https://cdn.tailwindcss.com"></script>
+        </head>
+        <body class="bg-stone-50 text-stone-800 min-h-screen flex items-center justify-center p-4">
+            <div class="max-w-md w-full bg-white p-8 rounded-lg shadow-sm border border-stone-200 text-center">
+                <h1 class="text-2xl font-bold text-stone-900 mb-2">Ευχαριστούμε για την Παραγγελία σας!</h1>
+                <p class="text-stone-600 text-sm mb-6">Η πληρωμή σας ολοκληρώθηκε με επιτυχία.</p>
+                <a href="/" class="block w-full bg-stone-900 text-white py-3 rounded text-sm uppercase tracking-wider font-medium">Επιστροφή στο Κατάστημα</a>
+            </div>
+        </body>
+        </html>
+    `);
+});
+
+// Favicon Handler
 app.get('/favicon.ico', (req, res) => {
     const faviconPath = path.join(ROOT_DIR, 'favicon.ico');
     if (fs.existsSync(faviconPath)) {
-        res.sendFile(faviconPath);
-    } else {
-        res.status(204).end();
+        return res.sendFile(faviconPath);
     }
+    res.status(204).end();
 });
 
 // Redirect direct /index.html requests to root
@@ -203,10 +191,10 @@ app.get('/index.html', (req, res) => {
     res.redirect(301, '/' + queryString);
 });
 
-// Serve static assets
+// Serve static assets from Root Directory
 app.use(express.static(ROOT_DIR, { maxAge: '1d' }));
 
-// Express 5 compatible SPA fallback middleware
+// SPA Fallback Handler
 app.use((req, res) => {
     res.sendFile(path.join(ROOT_DIR, 'index.html'));
 });
