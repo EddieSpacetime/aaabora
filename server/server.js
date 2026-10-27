@@ -23,28 +23,58 @@ const ROOT_DIR = fs.existsSync(path.join(__dirname, 'index.html'))
     ? __dirname
     : path.resolve(__dirname, '..');
 
-// 🚀 1. FIRST-PRIORITY INTERCEPTOR FOR SUCCESS PAGE
+// 🚀 1. FIRST-PRIORITY INTERCEPTOR FOR SUCCESS PAGE (Trilingual Support: EN, EL, IT)
 app.get(['/success.html', '/success'], (req, res) => {
-    const possiblePaths = [
-        path.join(ROOT_DIR, 'success.html'),
-        path.join(__dirname, '../success.html'),
-        path.join(__dirname, 'success.html')
-    ];
+    const lang = (req.query.lang || 'el').toLowerCase();
 
-    for (const p of possiblePaths) {
-        if (fs.existsSync(p)) {
-            return res.sendFile(p);
+    // Localization Data Dictionary
+    const content = {
+        en: {
+            title: 'Successful Order · Aabora',
+            heading: 'Thank You for Your Order!',
+            message: 'Your payment was completed successfully. A confirmation email with shipping details has been sent.',
+            statusLabel: 'Status:',
+            statusVal: 'Processing',
+            methodLabel: 'Method:',
+            button: 'Return to Store',
+            footer: 'All rights reserved.',
+            homeUrl: '/?lang=en'
+        },
+        it: {
+            title: 'Ordine Confermato · Aabora',
+            heading: 'Grazie per il tuo Ordine!',
+            message: 'Il tuo pagamento è stato completato con successo. Un\'e-mail di conferma con i dettagli di spedizione è stata inviata.',
+            statusLabel: 'Stato:',
+            statusVal: 'In elaborazione',
+            methodLabel: 'Metodo:',
+            button: 'Torna al Negozio',
+            footer: 'Tutti i diritti riservati.',
+            homeUrl: '/?lang=it'
+        },
+        el: {
+            title: 'Επιτυχής Παραγγελία · Aabora',
+            heading: 'Ευχαριστούμε για την Παραγγελία σας!',
+            message: 'Η πληρωμή σας ολοκληρώθηκε με επιτυχία. Ένα email επιβεβαίωσης και λεπτομερειών αποστολής έχει αποσταλεί.',
+            statusLabel: 'Κατάσταση:',
+            statusVal: 'Επεξεργάζεται',
+            methodLabel: 'Μέθοδος:',
+            button: 'Επιστροφή στο Κατάστημα',
+            footer: 'Με επιφύλαξη παντός δικαιώματος.',
+            homeUrl: '/'
         }
-    }
+    };
+
+    // Fallback to Greek if language code is unmapped
+    const t = content[lang] || content.el;
 
     res.setHeader('Content-Type', 'text/html; charset=utf-8');
     return res.status(200).send(`
         <!DOCTYPE html>
-        <html lang="el">
+        <html lang="${lang}">
         <head>
             <meta charset="UTF-8">
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
-            <title>Επιτυχής Παραγγελία · Aabora</title>
+            <title>${t.title}</title>
             <script src="https://cdn.tailwindcss.com"></script>
             <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
             <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -55,24 +85,30 @@ app.get(['/success.html', '/success'], (req, res) => {
         </head>
         <body class="bg-stone-50 text-stone-800 min-h-screen flex flex-col justify-between">
             <header class="bg-white border-b border-stone-200 py-4 px-6 text-center">
-                <a href="/" class="font-cinzel text-2xl tracking-widest font-bold text-stone-900 uppercase">AABORA</a>
+                <a href="${t.homeUrl}" class="font-cinzel text-2xl tracking-widest font-bold text-stone-900 uppercase">AABORA</a>
             </header>
             <main class="flex-grow flex items-center justify-center px-4 py-16">
                 <div class="max-w-md w-full bg-white p-8 rounded-lg shadow-sm border border-stone-200 text-center">
                     <div class="w-16 h-16 bg-emerald-50 text-emerald-600 rounded-full flex items-center justify-center mx-auto mb-6 text-2xl">
                         <i class="fas fa-check"></i>
                     </div>
-                    <h1 class="font-cinzel text-2xl font-bold text-stone-900 mb-2">Ευχαριστούμε για την Παραγγελία σας!</h1>
+                    <h1 class="font-cinzel text-2xl font-bold text-stone-900 mb-2">
+                        ${t.heading}
+                    </h1>
                     <p class="text-stone-600 text-sm mb-6">
-                        Η πληρωμή σας ολοκληρώθηκε με επιτυχία. Ένα email επιβεβαίωσης και λεπτομερειών αποστολής έχει αποσταλεί.
+                        ${t.message}
                     </p>
-                    <a href="/" class="block w-full bg-stone-900 text-white py-3 px-4 rounded text-sm uppercase tracking-wider font-medium hover:bg-stone-800 transition">
-                        Επιστροφή στο Κατάστημα
+                    <div class="border-t border-b border-stone-100 py-4 mb-6 text-left text-xs text-stone-500 space-y-1">
+                        <p><span class="font-semibold text-stone-700">${t.statusLabel}</span> ${t.statusVal}</p>
+                        <p><span class="font-semibold text-stone-700">${t.methodLabel}</span> Stripe Secure Checkout</p>
+                    </div>
+                    <a href="${t.homeUrl}" class="block w-full bg-stone-900 text-white py-3 px-4 rounded text-sm uppercase tracking-wider font-medium hover:bg-stone-800 transition">
+                        ${t.button}
                     </a>
                 </div>
             </main>
             <footer class="bg-white border-t border-stone-200 py-4 text-center text-xs text-stone-500">
-                © 2026 Aabora. Με επιφύλαξη παντός δικαιώματος.
+                © 2026 Aabora. ${t.footer}
             </footer>
         </body>
         </html>
@@ -121,18 +157,20 @@ function ensureAbsoluteUrl(rawUrl, baseUrl) {
     return `${baseUrl}/${trimmed}`;
 }
 
-// Stripe Checkout Endpoint with Strict Image & Domain URL Validation
+// Stripe Checkout Endpoint
 app.post('/create-checkout-session', async (req, res) => {
-    const { items, currency = 'eur' } = req.body;
+    const { items, currency = 'eur', lang = 'el' } = req.body;
     
-    // Determine strict absolute origin
+    // Determine strict absolute origin with auto-cleaning
     let rawOrigin = process.env.DOMAIN || `${req.protocol}://${req.get('host')}`;
-    if (!rawOrigin.startsWith('http://') && !rawOrigin.startsWith('https://')) {
-        rawOrigin = `https://${rawOrigin}`;
-    }
-    const origin = rawOrigin.replace(/\/+$/, ''); // Strip trailing slash
+    rawOrigin = rawOrigin.replace(/^domain=/i, '').trim();
 
-    console.log("🛒 Processing Checkout Request for Origin:", origin);
+    if (!rawOrigin.startsWith('http://') && !rawOrigin.startsWith('https://')) {
+        rawOrigin = `https://${rawOrigin.replace(/^https?\/\/?/i, '')}`;
+    }
+    const origin = rawOrigin.replace(/\/+$/, '');
+
+    console.log("🛒 Processing Checkout Request for Clean Origin:", origin, "| Lang:", lang);
 
     if (!items || !Array.isArray(items) || items.length === 0) {
         return res.status(400).json({ error: 'No items provided in cart.' });
@@ -157,12 +195,11 @@ app.post('/create-checkout-session', async (req, res) => {
                     product_data: {
                         name: item.name || 'Jewelry Item',
                     },
-                    unit_amount: unitAmount > 0 ? unitAmount : 1500, // Default €15.00 fallback
+                    unit_amount: unitAmount > 0 ? unitAmount : 1500,
                 },
                 quantity: parseInt(item.qty || item.quantity || 1, 10),
             };
 
-            // Process image URL: only add if it produces a valid absolute HTTP/HTTPS URL
             if (item.image) {
                 const validImgUrl = ensureAbsoluteUrl(item.image, origin);
                 if (validImgUrl) {
@@ -176,7 +213,7 @@ app.post('/create-checkout-session', async (req, res) => {
         const session = await stripe.checkout.sessions.create({
             line_items: lineItems,
             mode: 'payment',
-            success_url: `${origin}/success.html?session_id={CHECKOUT_SESSION_ID}`,
+            success_url: `${origin}/success.html?lang=${lang}&session_id={CHECKOUT_SESSION_ID}`,
             cancel_url: `${origin}/?canceled=true`,
         });
 
