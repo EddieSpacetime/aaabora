@@ -154,13 +154,43 @@ app.post('/api/bespoke-inquiry', async (req, res) => {
     }
 });
 
-// Explicit Handler for success.html
+// Bulletproof Explicit Handler for success.html
 app.get('/success.html', (req, res) => {
-    const successPath = path.join(ROOT_DIR, 'success.html');
-    if (fs.existsSync(successPath)) {
-        res.sendFile(successPath);
+    const possiblePaths = [
+        path.join(ROOT_DIR, 'success.html'),
+        path.join(__dirname, '../success.html'),
+        path.join(__dirname, 'success.html')
+    ];
+
+    let foundPath = null;
+    for (const p of possiblePaths) {
+        if (fs.existsSync(p)) {
+            foundPath = p;
+            break;
+        }
+    }
+
+    if (foundPath) {
+        res.sendFile(foundPath);
     } else {
-        res.redirect('/');
+        // Fallback HTML if the file somehow isn't found on the disk
+        res.send(`
+            <!DOCTYPE html>
+            <html lang="el">
+            <head>
+                <meta charset="UTF-8">
+                <title>Επιτυχής Παραγγελία · Aabora</title>
+                <script src="https://cdn.tailwindcss.com"></script>
+            </head>
+            <body class="bg-stone-50 text-stone-800 min-h-screen flex items-center justify-center">
+                <div class="max-w-md w-full bg-white p-8 rounded shadow text-center">
+                    <h1 class="text-2xl font-bold mb-2">Ευχαριστούμε για την Παραγγελία σας!</h1>
+                    <p class="text-stone-600 text-sm mb-6">Η πληρωμή σας ολοκληρώθηκε με επιτυχία.</p>
+                    <a href="/" class="block w-full bg-stone-900 text-white py-3 rounded text-sm uppercase">Επιστροφή στο Κατάστημα</a>
+                </div>
+            </body>
+            </html>
+        `);
     }
 });
 
