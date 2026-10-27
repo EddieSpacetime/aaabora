@@ -1,50 +1,702 @@
 [
-  {
-    "id": "prod-1",
-    "category": "rings",
-    "price": 240.00,
-    "image": "assets/images/products/ring-1.jpg",
-    "name": {
-      "en": "Organic Gold Ring",
-      "el": "Οργανικό Χρυσό Δαχτυλίδι",
-      "it": "Anello in Oro Organico"
-    },
-    "description": {
-      "en": "Handcrafted with raw organic textures in 14k gold.",
-      "el": "Χειροποίητο με ακατέργαστες οργανικές υφές σε χρυσό 14k.",
-      "it": "Realizzato a mano con trame organiche grezze in oro 14k."
-    }
+ {
+  "id": 24,
+  "category": "ring",
+  "price": 68,
+  "tone": "brass",
+  "name": {
+   "en": "Ring 1",
+   "it": "Anello 1",
+   "el": "Δαχτυλίδι 1",
+   "ru": "Кольцо 1"
   },
-  {
-    "id": "prod-2",
-    "category": "necklaces",
-    "price": 320.00,
-    "image": "assets/images/products/necklace-1.jpg",
-    "name": {
-      "en": "Mineral Pendant Necklace",
-      "el": "Κολιέ με Ορυκτό Μεταλλικό Πρότυπο",
-      "it": "Collana con Pendente Minerale"
-    },
-    "description": {
-      "en": "Featuring a raw gemstone set in a textured precious metal pendant.",
-      "el": "Διαθέτει ακατέργαστο πολύτιμο λίθο σε ανάγλυφο περίβλημα.",
-      "it": "Caratterizzato da una pietra preziosa grezza incastonata."
-    }
+  "material": {
+   "en": "Handmade",
+   "it": "Fatto a mano",
+   "el": "Χειροποίητο",
+   "ru": "Ручная работа"
   },
-  {
-    "id": "prod-3",
-    "category": "earrings",
-    "price": 180.00,
-    "image": "assets/images/products/earrings-1.jpg",
-    "name": {
-      "en": "Textured Leaf Earrings",
-      "el": "Ανάγλυφα Σκουλαρίκια Φύλλου",
-      "it": "Orecchini a Foglia Testurizzati"
-    },
-    "description": {
-      "en": "Delicate drops inspired by natural foliage patterns.",
-      "el": "Λεπτά κρεμαστά σκουλαρίκια εμπνευσμένα από μοτίβα της φύσης.",
-      "it": "Delicati pendenti ispirati ai motivi del fogliame naturale."
-    }
-  }
+  "image": "assets/images/products/ring-1.jpg",
+  "for": "her"
+ },
+ {
+  "id": 25,
+  "category": "ring",
+  "price": 68,
+  "tone": "accent",
+  "name": {
+   "en": "Ring 2",
+   "it": "Anello 2",
+   "el": "Δαχτυλίδι 2",
+   "ru": "Кольцо 2"
+  },
+  "material": {
+   "en": "Handmade",
+   "it": "Fatto a mano",
+   "el": "Χειροποίητο",
+   "ru": "Ручная работа"
+  },
+  "image": "assets/images/products/ring-2.jpg",
+  "for": "her"
+ },
+ {
+  "id": 26,
+  "category": "ring",
+  "price": 68,
+  "tone": "brass",
+  "name": {
+   "en": "Ring 3",
+   "it": "Anello 3",
+   "el": "Δαχτυλίδι 3",
+   "ru": "Кольцо 3"
+  },
+  "material": {
+   "en": "Handmade",
+   "it": "Fatto a mano",
+   "el": "Χειροποίητο",
+   "ru": "Ручная работа"
+  },
+  "image": "assets/images/products/ring-3.jpg",
+  "for": "her"
+ },
+ {
+  "id": 27,
+  "category": "ring",
+  "price": 68,
+  "tone": "accent",
+  "name": {
+   "en": "Ring 4",
+   "it": "Anello 4",
+   "el": "Δαχτυλίδι 4",
+   "ru": "Кольцо 4"
+  },
+  "material": {
+   "en": "Handmade",
+   "it": "Fatto a mano",
+   "el": "Χειροποίητο",
+   "ru": "Ручная работа"
+  },
+  "image": "assets/images/products/ring-4.jpg",
+  "for": "her"
+ },
+ {
+  "id": 28,
+  "category": "ring",
+  "price": 68,
+  "tone": "brass",
+  "name": {
+   "en": "Ring 5",
+   "it": "Anello 5",
+   "el": "Δαχτυλίδι 5",
+   "ru": "Кольцо 5"
+  },
+  "material": {
+   "en": "Handmade",
+   "it": "Fatto a mano",
+   "el": "Χειροποίητο",
+   "ru": "Ручная работа"
+  },
+  "image": "assets/images/products/ring-5.jpg",
+  "for": "her"
+ },
+ {
+  "id": 29,
+  "category": "ring",
+  "price": 68,
+  "tone": "accent",
+  "name": {
+   "en": "Ring 6",
+   "it": "Anello 6",
+   "el": "Δαχτυλίδι 6",
+   "ru": "Кольцо 6"
+  },
+  "material": {
+   "en": "Handmade",
+   "it": "Fatto a mano",
+   "el": "Χειροποίητο",
+   "ru": "Ручная работа"
+  },
+  "image": "assets/images/products/ring-6.jpg",
+  "for": "her"
+ },
+ {
+  "id": 30,
+  "category": "ring",
+  "price": 68,
+  "tone": "brass",
+  "name": {
+   "en": "Ring 7",
+   "it": "Anello 7",
+   "el": "Δαχτυλίδι 7",
+   "ru": "Кольцо 7"
+  },
+  "material": {
+   "en": "Handmade",
+   "it": "Fatto a mano",
+   "el": "Χειροποίητο",
+   "ru": "Ручная работа"
+  },
+  "image": "assets/images/products/ring-7.jpg",
+  "for": "her"
+ },
+ {
+  "id": 31,
+  "category": "ring",
+  "price": 68,
+  "tone": "accent",
+  "name": {
+   "en": "Ring 8",
+   "it": "Anello 8",
+   "el": "Δαχτυλίδι 8",
+   "ru": "Кольцо 8"
+  },
+  "material": {
+   "en": "Handmade",
+   "it": "Fatto a mano",
+   "el": "Χειροποίητο",
+   "ru": "Ручная работа"
+  },
+  "image": "assets/images/products/ring-8.jpg",
+  "for": "her"
+ },
+ {
+  "id": 32,
+  "category": "ring",
+  "price": 68,
+  "tone": "brass",
+  "name": {
+   "en": "Ring 9",
+   "it": "Anello 9",
+   "el": "Δαχτυλίδι 9",
+   "ru": "Кольцо 9"
+  },
+  "material": {
+   "en": "Handmade",
+   "it": "Fatto a mano",
+   "el": "Χειροποίητο",
+   "ru": "Ручная работа"
+  },
+  "image": "assets/images/products/ring-9.jpg",
+  "for": "her"
+ },
+ {
+  "id": 33,
+  "category": "ring",
+  "price": 68,
+  "tone": "accent",
+  "name": {
+   "en": "Ring 10",
+   "it": "Anello 10",
+   "el": "Δαχτυλίδι 10",
+   "ru": "Кольцо 10"
+  },
+  "material": {
+   "en": "Handmade",
+   "it": "Fatto a mano",
+   "el": "Χειροποίητο",
+   "ru": "Ручная работа"
+  },
+  "image": "assets/images/products/ring-10.jpg",
+  "for": "her"
+ },
+ {
+  "id": 34,
+  "category": "ring",
+  "price": 68,
+  "tone": "brass",
+  "name": {
+   "en": "Ring 11",
+   "it": "Anello 11",
+   "el": "Δαχτυλίδι 11",
+   "ru": "Кольцо 11"
+  },
+  "material": {
+   "en": "Handmade",
+   "it": "Fatto a mano",
+   "el": "Χειροποίητο",
+   "ru": "Ручная работа"
+  },
+  "image": "assets/images/products/ring-11.jpg",
+  "for": "her"
+ },
+ {
+  "id": 35,
+  "category": "ring",
+  "price": 68,
+  "tone": "accent",
+  "name": {
+   "en": "Ring 12",
+   "it": "Anello 12",
+   "el": "Δαχτυλίδι 12",
+   "ru": "Кольцо 12"
+  },
+  "material": {
+   "en": "Handmade",
+   "it": "Fatto a mano",
+   "el": "Χειροποίητο",
+   "ru": "Ручная работа"
+  },
+  "image": "assets/images/products/ring-12.jpg",
+  "for": "her"
+ },
+ {
+  "id": 36,
+  "category": "ring",
+  "price": 68,
+  "tone": "brass",
+  "name": {
+   "en": "Ring 13",
+   "it": "Anello 13",
+   "el": "Δαχτυλίδι 13",
+   "ru": "Кольцо 13"
+  },
+  "material": {
+   "en": "Handmade",
+   "it": "Fatto a mano",
+   "el": "Χειροποίητο",
+   "ru": "Ручная работа"
+  },
+  "image": "assets/images/products/ring-13.jpg",
+  "for": "her"
+ },
+ {
+  "id": 37,
+  "category": "ring",
+  "price": 68,
+  "tone": "accent",
+  "name": {
+   "en": "Ring 14",
+   "it": "Anello 14",
+   "el": "Δαχτυλίδι 14",
+   "ru": "Кольцо 14"
+  },
+  "material": {
+   "en": "Handmade",
+   "it": "Fatto a mano",
+   "el": "Χειροποίητο",
+   "ru": "Ручная работа"
+  },
+  "image": "assets/images/products/ring-14.jpg",
+  "for": "her"
+ },
+ {
+  "id": 38,
+  "category": "ring",
+  "price": 68,
+  "tone": "brass",
+  "name": {
+   "en": "Ring 15",
+   "it": "Anello 15",
+   "el": "Δαχτυλίδι 15",
+   "ru": "Кольцо 15"
+  },
+  "material": {
+   "en": "Handmade",
+   "it": "Fatto a mano",
+   "el": "Χειροποίητο",
+   "ru": "Ручная работа"
+  },
+  "image": "assets/images/products/ring-15.jpg",
+  "for": "her"
+ },
+ {
+  "id": 39,
+  "category": "ring",
+  "price": 68,
+  "tone": "accent",
+  "name": {
+   "en": "Ring 16",
+   "it": "Anello 16",
+   "el": "Δαχτυλίδι 16",
+   "ru": "Кольцо 16"
+  },
+  "material": {
+   "en": "Handmade",
+   "it": "Fatto a mano",
+   "el": "Χειροποίητο",
+   "ru": "Ручная работа"
+  },
+  "image": "assets/images/products/ring-16.jpg",
+  "for": "her"
+ },
+ {
+  "id": 40,
+  "category": "ring",
+  "price": 68,
+  "tone": "brass",
+  "name": {
+   "en": "Ring 17",
+   "it": "Anello 17",
+   "el": "Δαχτυλίδι 17",
+   "ru": "Кольцо 17"
+  },
+  "material": {
+   "en": "Handmade",
+   "it": "Fatto a mano",
+   "el": "Χειροποίητο",
+   "ru": "Ручная работа"
+  },
+  "image": "assets/images/products/ring-17.jpg",
+  "for": "her"
+ },
+ {
+  "id": 41,
+  "category": "ring",
+  "price": 68,
+  "tone": "accent",
+  "name": {
+   "en": "Ring 18",
+   "it": "Anello 18",
+   "el": "Δαχτυλίδι 18",
+   "ru": "Кольцо 18"
+  },
+  "material": {
+   "en": "Handmade",
+   "it": "Fatto a mano",
+   "el": "Χειροποίητο",
+   "ru": "Ручная работа"
+  },
+  "image": "assets/images/products/ring-18.jpg",
+  "for": "her"
+ },
+ {
+  "id": 42,
+  "category": "ring",
+  "price": 68,
+  "tone": "brass",
+  "name": {
+   "en": "Ring 19",
+   "it": "Anello 19",
+   "el": "Δαχτυλίδι 19",
+   "ru": "Кольцо 19"
+  },
+  "material": {
+   "en": "Handmade",
+   "it": "Fatto a mano",
+   "el": "Χειροποίητο",
+   "ru": "Ручная работа"
+  },
+  "image": "assets/images/products/ring-19.jpg",
+  "for": "her"
+ },
+ {
+  "id": 43,
+  "category": "ring",
+  "price": 68,
+  "tone": "accent",
+  "name": {
+   "en": "Ring 20",
+   "it": "Anello 20",
+   "el": "Δαχτυλίδι 20",
+   "ru": "Кольцо 20"
+  },
+  "material": {
+   "en": "Handmade",
+   "it": "Fatto a mano",
+   "el": "Χειροποίητο",
+   "ru": "Ручная работа"
+  },
+  "image": "assets/images/products/ring-20.jpg",
+  "for": "her"
+ },
+ {
+  "id": 9,
+  "category": "earring",
+  "price": 54,
+  "tone": "accent",
+  "name": {
+   "en": "Earrings 1",
+   "it": "Orecchini 1",
+   "el": "Σκουλαρίκια 1",
+   "ru": "Серьги 1"
+  },
+  "material": {
+   "en": "Handmade",
+   "it": "Fatto a mano",
+   "el": "Χειροποίητο",
+   "ru": "Ручная работа"
+  },
+  "image": "assets/images/products/earrings-1.jpg",
+  "for": "her"
+ },
+ {
+  "id": 10,
+  "category": "earring",
+  "price": 54,
+  "tone": "brass",
+  "name": {
+   "en": "Earrings 2",
+   "it": "Orecchini 2",
+   "el": "Σκουλαρίκια 2",
+   "ru": "Серьги 2"
+  },
+  "material": {
+   "en": "Handmade",
+   "it": "Fatto a mano",
+   "el": "Χειροποίητο",
+   "ru": "Ручная работа"
+  },
+  "image": "assets/images/products/earrings-2.jpg",
+  "for": "her"
+ },
+ {
+  "id": 11,
+  "category": "earring",
+  "price": 54,
+  "tone": "accent",
+  "name": {
+   "en": "Earrings 3",
+   "it": "Orecchini 3",
+   "el": "Σκουλαρίκια 3",
+   "ru": "Серьги 3"
+  },
+  "material": {
+   "en": "Handmade",
+   "it": "Fatto a mano",
+   "el": "Χειροποίητο",
+   "ru": "Ручная работа"
+  },
+  "image": "assets/images/products/earrings-3.jpg",
+  "for": "her"
+ },
+ {
+  "id": 12,
+  "category": "earring",
+  "price": 54,
+  "tone": "brass",
+  "name": {
+   "en": "Earrings 4",
+   "it": "Orecchini 4",
+   "el": "Σκουλαρίκια 4",
+   "ru": "Серьги 4"
+  },
+  "material": {
+   "en": "Handmade",
+   "it": "Fatto a mano",
+   "el": "Χειροποίητο",
+   "ru": "Ручная работа"
+  },
+  "image": "assets/images/products/earrings-4.jpg",
+  "for": "her"
+ },
+ {
+  "id": 13,
+  "category": "earring",
+  "price": 54,
+  "tone": "accent",
+  "name": {
+   "en": "Earrings 5",
+   "it": "Orecchini 5",
+   "el": "Σκουλαρίκια 5",
+   "ru": "Серьги 5"
+  },
+  "material": {
+   "en": "Handmade",
+   "it": "Fatto a mano",
+   "el": "Χειροποίητο",
+   "ru": "Ручная работа"
+  },
+  "image": "assets/images/products/earrings-5.jpg",
+  "for": "her"
+ },
+ {
+  "id": 14,
+  "category": "earring",
+  "price": 54,
+  "tone": "brass",
+  "name": {
+   "en": "Earrings 6",
+   "it": "Orecchini 6",
+   "el": "Σκουλαρίκια 6",
+   "ru": "Серьги 6"
+  },
+  "material": {
+   "en": "Handmade",
+   "it": "Fatto a mano",
+   "el": "Χειροποίητο",
+   "ru": "Ручная работа"
+  },
+  "image": "assets/images/products/earrings-6.jpg",
+  "for": "her"
+ },
+ {
+  "id": 15,
+  "category": "earring",
+  "price": 54,
+  "tone": "accent",
+  "name": {
+   "en": "Earrings 7",
+   "it": "Orecchini 7",
+   "el": "Σκουλαρίκια 7",
+   "ru": "Серьги 7"
+  },
+  "material": {
+   "en": "Handmade",
+   "it": "Fatto a mano",
+   "el": "Χειροποίητο",
+   "ru": "Ручная работа"
+  },
+  "image": "assets/images/products/earrings-7.jpg",
+  "for": "her"
+ },
+ {
+  "id": 16,
+  "category": "earring",
+  "price": 54,
+  "tone": "brass",
+  "name": {
+   "en": "Earrings 8",
+   "it": "Orecchini 8",
+   "el": "Σκουλαρίκια 8",
+   "ru": "Серьги 8"
+  },
+  "material": {
+   "en": "Handmade",
+   "it": "Fatto a mano",
+   "el": "Χειροποίητο",
+   "ru": "Ручная работа"
+  },
+  "image": "assets/images/products/earrings-8.jpg",
+  "for": "her"
+ },
+ {
+  "id": 17,
+  "category": "earring",
+  "price": 54,
+  "tone": "accent",
+  "name": {
+   "en": "Earrings 9",
+   "it": "Orecchini 9",
+   "el": "Σκουλαρίκια 9",
+   "ru": "Серьги 9"
+  },
+  "material": {
+   "en": "Handmade",
+   "it": "Fatto a mano",
+   "el": "Χειροποίητο",
+   "ru": "Ручная работа"
+  },
+  "image": "assets/images/products/earrings-9.jpg",
+  "for": "her"
+ },
+ {
+  "id": 18,
+  "category": "earring",
+  "price": 54,
+  "tone": "brass",
+  "name": {
+   "en": "Earrings 10",
+   "it": "Orecchini 10",
+   "el": "Σκουλαρίκια 10",
+   "ru": "Серьги 10"
+  },
+  "material": {
+   "en": "Handmade",
+   "it": "Fatto a mano",
+   "el": "Χειροποίητο",
+   "ru": "Ручная работа"
+  },
+  "image": "assets/images/products/earrings-10.jpg",
+  "for": "her"
+ },
+ {
+  "id": 19,
+  "category": "earring",
+  "price": 54,
+  "tone": "accent",
+  "name": {
+   "en": "Earrings 11",
+   "it": "Orecchini 11",
+   "el": "Σκουλαρίκια 11",
+   "ru": "Серьги 11"
+  },
+  "material": {
+   "en": "Handmade",
+   "it": "Fatto a mano",
+   "el": "Χειροποίητο",
+   "ru": "Ручная работа"
+  },
+  "image": "assets/images/products/earrings-11.jpg",
+  "for": "her"
+ },
+ {
+  "id": 20,
+  "category": "earring",
+  "price": 54,
+  "tone": "brass",
+  "name": {
+   "en": "Earrings 12",
+   "it": "Orecchini 12",
+   "el": "Σκουλαρίκια 12",
+   "ru": "Серьги 12"
+  },
+  "material": {
+   "en": "Handmade",
+   "it": "Fatto a mano",
+   "el": "Χειροποίητο",
+   "ru": "Ручная работа"
+  },
+  "image": "assets/images/products/earrings-55.jpg",
+  "for": "her"
+ },
+ {
+  "id": 21,
+  "category": "necklace",
+  "price": 96,
+  "tone": "accent",
+  "name": {
+   "en": "Necklace 1",
+   "it": "Collana 1",
+   "el": "Κολιέ 1",
+   "ru": "Колье 1"
+  },
+  "material": {
+   "en": "Handmade",
+   "it": "Fatto a mano",
+   "el": "Χειροποίητο",
+   "ru": "Ручная работа"
+  },
+  "image": "assets/images/products/necklace-1.jpg",
+  "for": "her"
+ },
+ {
+  "id": 22,
+  "category": "necklace",
+  "price": 96,
+  "tone": "brass",
+  "name": {
+   "en": "Necklace 2",
+   "it": "Collana 2",
+   "el": "Κολιέ 2",
+   "ru": "Колье 2"
+  },
+  "material": {
+   "en": "Handmade",
+   "it": "Fatto a mano",
+   "el": "Χειροποίητο",
+   "ru": "Ручная работа"
+  },
+  "image": "assets/images/products/Necklace-1.png",
+  "for": "her"
+ },
+ {
+  "id": 23,
+  "category": "necklace",
+  "price": 96,
+  "tone": "accent",
+  "name": {
+   "en": "Necklace 3",
+   "it": "Collana 3",
+   "el": "Κολιέ 3",
+   "ru": "Колье 3"
+  },
+  "material": {
+   "en": "Handmade",
+   "it": "Fatto a mano",
+   "el": "Χειροποίητο",
+   "ru": "Ручная работа"
+  },
+  "image": "assets/images/products/necklace-2.jpg",
+  "for": "her"
+ }
 ]
