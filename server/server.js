@@ -18,6 +18,11 @@ const stripe = require('stripe')(apiKey);
 
 const app = express();
 
+// Root directory determination (supports running from root or /server subfolder)
+const ROOT_DIR = fs.existsSync(path.join(__dirname, 'index.html'))
+    ? __dirname
+    : path.join(__dirname, '..');
+
 // Security Headers & Response Compression
 app.use(helmet({
     contentSecurityPolicy: false,
@@ -50,7 +55,6 @@ app.get('/api/health', (req, res) => {
 app.post('/create-checkout-session', async (req, res) => {
     const { items, currency = 'eur' } = req.body;
 
-    // Dynamically resolve domain from environment variable or request protocol/host
     const origin = process.env.DOMAIN || `${req.protocol}://${req.get('host')}`;
 
     const lineItems = items.map(item => {
@@ -104,7 +108,7 @@ app.post('/api/bespoke-inquiry', async (req, res) => {
         notes,
     };
 
-    const dataDir = path.join(__dirname, '../data');
+    const dataDir = path.join(ROOT_DIR, 'data');
     const filePath = path.join(dataDir, 'inquiries.json');
 
     try {
@@ -150,28 +154,36 @@ app.post('/api/bespoke-inquiry', async (req, res) => {
     }
 });
 
-// Serve favicon.ico directly from root directory
-app.get('/favicon.ico', (req, res) => {
-    res.sendFile(path.join(__dirname, '../favicon.ico'));
+// Serve static assets first
+app.use(express.static(ROOT_DIR, { maxAge: '1d' }));
+
+// Explicit Root Route
+app.get('/', (req, res) => {
+    res.sendFile(path.join(ROOT_DIR, 'index.html'));
 });
 
-// Explicit Redirect for /index.html requests to preserve query parameters and avoid 404s
+// Favicon Route Handler
+app.get('/favicon.ico', (req, res) => {
+    const faviconPath = path.join(ROOT_DIR, 'favicon.ico');
+    if (fs.existsSync(faviconPath)) {
+        res.sendFile(faviconPath);
+    } else {
+        res.status(204).end();
+    }
+});
+
+// Redirect direct /index.html requests to root while retaining query parameters
 app.get('/index.html', (req, res) => {
     const queryString = req.url.includes('?') ? req.url.substring(req.url.indexOf('?')) : '';
     res.redirect(301, '/' + queryString);
 });
 
 // SPA Routing Fallback
-app.get('/index_:lang.html', (req, res) => {
-    res.sendFile(path.join(__dirname, '../index.html'));
+app.get('*', (req, res) => {
+    res.sendFile(path.join(ROOT_DIR, 'index.html'));
 });
 
-// Serve static assets
-app.use(express.static(path.join(__dirname, '..'), {
-    maxAge: '1d'
-}));
-
-// Port Binding (Standard Port Listening for Render)
+// Port Binding
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
     console.log(`Aabora server running on port ${PORT}`);
