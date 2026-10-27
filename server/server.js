@@ -49,19 +49,37 @@ app.get('/api/health', (req, res) => {
     });
 });
 
-// Stripe Checkout Endpoint
+// Stripe Checkout Endpoint with Safe Price Parsing & Card Enforcement
 app.post('/create-checkout-session', async (req, res) => {
     const { items, currency = 'eur' } = req.body;
     const origin = process.env.DOMAIN || `${req.protocol}://${req.get('host')}`;
 
+    if (!items || !Array.isArray(items) || items.length === 0) {
+        return res.status(400).json({ error: 'No items provided in cart.' });
+    }
+
     const lineItems = items.map(item => {
+        // Clean and safely parse price (handling both raw numbers and strings like "€45.00")
+        let rawPrice = 0;
+        if (typeof item.price === 'string') {
+            rawPrice = parseFloat(item.price.replace(/[^0-9.]/g, ''));
+        } else if (typeof item.price === 'number') {
+            rawPrice = item.price;
+        } else if (typeof item.cost === 'number') {
+            rawPrice = item.cost;
+        }
+
+        const unitAmount = Math.round((isNaN(rawPrice) ? 0 : rawPrice) * 100);
+
         const itemData = {
             price_data: {
                 currency: currency.toLowerCase(),
-                product_data: { name: item.name },
-                unit_amount: Math.round(item.price * 100),
+                product_data: {
+                    name: item.name || 'Jewelry Item',
+                },
+                unit_amount: unitAmount > 0 ? unitAmount : 1000, // Fallback to 10.00 if unparseable
             },
-            quantity: item.qty,
+            quantity: parseInt(item.qty || item.quantity || 1, 10),
         };
 
         if (item.image && (item.image.startsWith('http://') || item.image.startsWith('https://'))) {
@@ -75,6 +93,7 @@ app.post('/create-checkout-session', async (req, res) => {
         const session = await stripe.checkout.sessions.create({
             line_items: lineItems,
             mode: 'payment',
+            payment_method_types: ['card'], // Explicitly force card input fields
             success_url: `${origin}/success.html?session_id={CHECKOUT_SESSION_ID}`,
             cancel_url: `${origin}/?canceled=true`,
         });
@@ -155,7 +174,6 @@ app.get('/success.html', (req, res) => {
         return res.sendFile(successPath);
     }
     
-    // Direct Fallback render if file lookup fails in container
     res.send(`
         <!DOCTYPE html>
         <html lang="el">
