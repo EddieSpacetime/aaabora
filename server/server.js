@@ -18,10 +18,44 @@ const stripe = require('stripe')(apiKey);
 
 const app = express();
 
-// Root directory determination (supports running from root or /server subfolder)
+// Root directory determination
 const ROOT_DIR = fs.existsSync(path.join(__dirname, 'index.html'))
     ? __dirname
     : path.join(__dirname, '..');
+
+// 🚀 TOP-PRIORITY ROUTE: Intercept success.html immediately before anything else
+app.get('/success.html', (req, res) => {
+    const possiblePaths = [
+        path.join(ROOT_DIR, 'success.html'),
+        path.join(__dirname, '../success.html'),
+        path.join(__dirname, 'success.html')
+    ];
+
+    for (const p of possiblePaths) {
+        if (fs.existsSync(p)) {
+            return res.sendFile(p);
+        }
+    }
+
+    // Inline fallback guarantee if file is missing on disk
+    res.send(`
+        <!DOCTYPE html>
+        <html lang="el">
+        <head>
+            <meta charset="UTF-8">
+            <title>Επιτυχής Παραγγελία · Aabora</title>
+            <script src="https://cdn.tailwindcss.com"></script>
+        </head>
+        <body class="bg-stone-50 text-stone-800 min-h-screen flex items-center justify-center">
+            <div class="max-w-md w-full bg-white p-8 rounded shadow text-center">
+                <h1 class="text-2xl font-bold mb-2">Ευχαριστούμε για την Παραγγελία σας!</h1>
+                <p class="text-stone-600 text-sm mb-6">Η πληρωμή σας ολοκληρώθηκε με επιτυχία.</p>
+                <a href="/" class="block w-full bg-stone-900 text-white py-3 rounded text-sm uppercase">Επιστροφή στο Κατάστημα</a>
+            </div>
+        </body>
+        </html>
+    `);
+});
 
 // Security Headers & Response Compression
 app.use(helmet({
@@ -42,7 +76,7 @@ const transporter = nodemailer.createTransport({
     },
 });
 
-// Health Check Endpoint for Monitoring
+// Health Check Endpoint
 app.get('/api/health', (req, res) => {
     res.status(200).json({
         status: 'UP',
@@ -51,10 +85,9 @@ app.get('/api/health', (req, res) => {
     });
 });
 
-// 1. Stripe Checkout Endpoint
+// Stripe Checkout Endpoint
 app.post('/create-checkout-session', async (req, res) => {
     const { items, currency = 'eur' } = req.body;
-
     const origin = process.env.DOMAIN || `${req.protocol}://${req.get('host')}`;
 
     const lineItems = items.map(item => {
@@ -91,7 +124,7 @@ app.post('/create-checkout-session', async (req, res) => {
     }
 });
 
-// 2. Bespoke Inquiry API Endpoint
+// Bespoke Inquiry API Endpoint
 app.post('/api/bespoke-inquiry', async (req, res) => {
     const { name, email, metal, budget, notes } = req.body;
 
@@ -151,46 +184,6 @@ app.post('/api/bespoke-inquiry', async (req, res) => {
     } catch (error) {
         console.error('Inquiry Processing Error:', error);
         res.status(500).json({ error: 'Failed to process inquiry.' });
-    }
-});
-
-// Bulletproof Explicit Handler for success.html
-app.get('/success.html', (req, res) => {
-    const possiblePaths = [
-        path.join(ROOT_DIR, 'success.html'),
-        path.join(__dirname, '../success.html'),
-        path.join(__dirname, 'success.html')
-    ];
-
-    let foundPath = null;
-    for (const p of possiblePaths) {
-        if (fs.existsSync(p)) {
-            foundPath = p;
-            break;
-        }
-    }
-
-    if (foundPath) {
-        res.sendFile(foundPath);
-    } else {
-        // Fallback HTML if the file somehow isn't found on the disk
-        res.send(`
-            <!DOCTYPE html>
-            <html lang="el">
-            <head>
-                <meta charset="UTF-8">
-                <title>Επιτυχής Παραγγελία · Aabora</title>
-                <script src="https://cdn.tailwindcss.com"></script>
-            </head>
-            <body class="bg-stone-50 text-stone-800 min-h-screen flex items-center justify-center">
-                <div class="max-w-md w-full bg-white p-8 rounded shadow text-center">
-                    <h1 class="text-2xl font-bold mb-2">Ευχαριστούμε για την Παραγγελία σας!</h1>
-                    <p class="text-stone-600 text-sm mb-6">Η πληρωμή σας ολοκληρώθηκε με επιτυχία.</p>
-                    <a href="/" class="block w-full bg-stone-900 text-white py-3 rounded text-sm uppercase">Επιστροφή στο Κατάστημα</a>
-                </div>
-            </body>
-            </html>
-        `);
     }
 });
 
