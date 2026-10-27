@@ -76,8 +76,8 @@ app.post('/create-checkout-session', async (req, res) => {
         const session = await stripe.checkout.sessions.create({
             line_items: lineItems,
             mode: 'payment',
-            success_url: `${origin}/index.html?session_id={CHECKOUT_SESSION_ID}`,
-            cancel_url: `${origin}/index.html?canceled=true`,
+            success_url: `${origin}/success.html?session_id={CHECKOUT_SESSION_ID}`,
+            cancel_url: `${origin}/?canceled=true`,
         });
 
         res.json({ url: session.url });
@@ -148,6 +148,17 @@ app.post('/api/bespoke-inquiry', async (req, res) => {
         console.error('Inquiry Processing Error:', error);
         res.status(500).json({ error: 'Failed to process inquiry.' });
     }
+});
+
+// Serve favicon.ico directly from root directory
+app.get('/favicon.ico', (req, res) => {
+    res.sendFile(path.join(__dirname, '../favicon.ico'));
+});
+
+// Explicit Redirect for /index.html requests to preserve query parameters and avoid 404s
+app.get('/index.html', (req, res) => {
+    const queryString = req.url.includes('?') ? req.url.substring(req.url.indexOf('?')) : '';
+    res.redirect(301, '/' + queryString);
 });
 
 // SPA Routing Fallback
