@@ -154,7 +154,17 @@ app.post('/api/bespoke-inquiry', async (req, res) => {
     }
 });
 
-// Favicon Route Handler
+// Explicit Handler for success.html
+app.get('/success.html', (req, res) => {
+    const successPath = path.join(ROOT_DIR, 'success.html');
+    if (fs.existsSync(successPath)) {
+        res.sendFile(successPath);
+    } else {
+        res.redirect('/');
+    }
+});
+
+// Explicit Favicon Route Handler
 app.get('/favicon.ico', (req, res) => {
     const faviconPath = path.join(ROOT_DIR, 'favicon.ico');
     if (fs.existsSync(faviconPath)) {
