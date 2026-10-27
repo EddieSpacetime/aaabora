@@ -24,9 +24,7 @@ const ROOT_DIR = fs.existsSync(path.join(__dirname, 'index.html'))
     : path.resolve(__dirname, '..');
 
 // 🚀 1. FIRST-PRIORITY INTERCEPTOR FOR SUCCESS PAGE
-// Placed at the very top to intercept requests before static or security middleware
 app.get(['/success.html', '/success'], (req, res) => {
-    // Check if success.html exists on disk in root or server directory
     const possiblePaths = [
         path.join(ROOT_DIR, 'success.html'),
         path.join(__dirname, '../success.html'),
@@ -39,7 +37,6 @@ app.get(['/success.html', '/success'], (req, res) => {
         }
     }
 
-    // Direct Embedded HTML Fallback (Guarantees 200 OK if file is missing in container)
     res.setHeader('Content-Type', 'text/html; charset=utf-8');
     return res.status(200).send(`
         <!DOCTYPE html>
@@ -108,49 +105,74 @@ app.get('/api/health', (req, res) => {
     });
 });
 
-// Stripe Checkout Endpoint
+// Helper Function: Ensure Absolute HTTP/HTTPS URLs for Stripe
+function ensureAbsoluteUrl(rawUrl, baseUrl) {
+    if (!rawUrl || typeof rawUrl !== 'string') return null;
+    let trimmed = rawUrl.trim();
+    if (trimmed.startsWith('http://') || trimmed.startsWith('https://')) {
+        return trimmed;
+    }
+    if (trimmed.startsWith('//')) {
+        return `https:${trimmed}`;
+    }
+    if (trimmed.startsWith('/')) {
+        return `${baseUrl}${trimmed}`;
+    }
+    return `${baseUrl}/${trimmed}`;
+}
+
+// Stripe Checkout Endpoint with Strict Image & Domain URL Validation
 app.post('/create-checkout-session', async (req, res) => {
     const { items, currency = 'eur' } = req.body;
-    const origin = process.env.DOMAIN || `${req.protocol}://${req.get('host')}`;
+    
+    // Determine strict absolute origin
+    let rawOrigin = process.env.DOMAIN || `${req.protocol}://${req.get('host')}`;
+    if (!rawOrigin.startsWith('http://') && !rawOrigin.startsWith('https://')) {
+        rawOrigin = `https://${rawOrigin}`;
+    }
+    const origin = rawOrigin.replace(/\/+$/, ''); // Strip trailing slash
 
-    console.log("🛒 Checkout Requested Items:", JSON.stringify(items, null, 2));
+    console.log("🛒 Processing Checkout Request for Origin:", origin);
 
     if (!items || !Array.isArray(items) || items.length === 0) {
         return res.status(400).json({ error: 'No items provided in cart.' });
     }
 
-    const lineItems = items.map(item => {
-        // Safe extraction handling numbers or string prices like "€45.00"
-        const targetPriceVal = item.price !== undefined ? item.price : (item.cost !== undefined ? item.cost : item.amount);
-        
-        let rawPrice = 0;
-        if (typeof targetPriceVal === 'string') {
-            rawPrice = parseFloat(targetPriceVal.replace(/[^0-9.]/g, ''));
-        } else if (typeof targetPriceVal === 'number') {
-            rawPrice = targetPriceVal;
-        }
-
-        const unitAmount = Math.round((isNaN(rawPrice) ? 0 : rawPrice) * 100);
-
-        const itemData = {
-            price_data: {
-                currency: currency.toLowerCase(),
-                product_data: {
-                    name: item.name || 'Jewelry Item',
-                },
-                unit_amount: unitAmount > 0 ? unitAmount : 1500, // Fallback to 15.00 if missing
-            },
-            quantity: parseInt(item.qty || item.quantity || 1, 10),
-        };
-
-        if (item.image && (item.image.startsWith('http://') || item.image.startsWith('https://'))) {
-            itemData.price_data.product_data.images = [item.image];
-        }
-
-        return itemData;
-    });
-
     try {
+        const lineItems = items.map(item => {
+            const targetPriceVal = item.price !== undefined ? item.price : (item.cost !== undefined ? item.cost : item.amount);
+            
+            let rawPrice = 0;
+            if (typeof targetPriceVal === 'string') {
+                rawPrice = parseFloat(targetPriceVal.replace(/[^0-9.]/g, ''));
+            } else if (typeof targetPriceVal === 'number') {
+                rawPrice = targetPriceVal;
+            }
+
+            const unitAmount = Math.round((isNaN(rawPrice) ? 0 : rawPrice) * 100);
+
+            const itemData = {
+                price_data: {
+                    currency: currency.toLowerCase(),
+                    product_data: {
+                        name: item.name || 'Jewelry Item',
+                    },
+                    unit_amount: unitAmount > 0 ? unitAmount : 1500, // Default €15.00 fallback
+                },
+                quantity: parseInt(item.qty || item.quantity || 1, 10),
+            };
+
+            // Process image URL: only add if it produces a valid absolute HTTP/HTTPS URL
+            if (item.image) {
+                const validImgUrl = ensureAbsoluteUrl(item.image, origin);
+                if (validImgUrl) {
+                    itemData.price_data.product_data.images = [validImgUrl];
+                }
+            }
+
+            return itemData;
+        });
+
         const session = await stripe.checkout.sessions.create({
             line_items: lineItems,
             mode: 'payment',
@@ -160,8 +182,8 @@ app.post('/create-checkout-session', async (req, res) => {
 
         res.json({ url: session.url });
     } catch (e) {
-        console.error('Stripe Session Error:', e.message);
-        res.status(500).json({ error: e.message });
+        console.error('❌ Stripe Checkout Session Error:', e.message);
+        res.status(500).json({ error: e.message || 'Failed to create Stripe session.' });
     }
 });
 
