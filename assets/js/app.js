@@ -119,6 +119,18 @@ class AppController {
                 const productId = qvBtn.getAttribute('data-id');
                 this.openQuickView(productId);
             }
+
+            // Remove item or clear cart actions
+            const removeBtn = e.target.closest('.remove-cart-item');
+            if (removeBtn) {
+                const productId = removeBtn.getAttribute('data-id');
+                this.removeFromCart(productId);
+            }
+
+            const clearCartBtn = e.target.closest('.clear-cart-btn');
+            if (clearCartBtn) {
+                this.clearCart();
+            }
         });
 
         [cartDrawer, wishlistDrawer].forEach(drawer => {
@@ -346,6 +358,20 @@ class AppController {
         this.showToast(`${title} ${actionText}`, 'bag-shopping');
     }
 
+    removeFromCart(productId) {
+        this.cart = this.cart.filter(item => item.id !== productId);
+        this.saveCart();
+        this.updateCartUI();
+        this.showToast('Item removed from your bag.', 'trash-can');
+    }
+
+    clearCart() {
+        this.cart = [];
+        this.saveCart();
+        this.updateCartUI();
+        this.showToast('Your shopping bag has been cleared.', 'trash-can');
+    }
+
     toggleWishlist(productId) {
         const index = this.wishlist.indexOf(productId);
         const product = this.products.find(p => p.id === productId);
@@ -396,7 +422,18 @@ class AppController {
                 container.innerHTML = `<p class="text-center text-stone-400 py-8 text-xs font-light">Your shopping bag is empty.</p>`;
             } else {
                 const currentLang = localStorage.getItem('aabora_lang') || 'en';
-                container.innerHTML = this.cart.map(item => {
+
+                let html = `
+                    <div class="flex justify-between items-center pb-3 mb-3 border-b border-brand-200 text-xs">
+                        <span class="text-stone-500 font-medium">${totalItems} items</span>
+                        <button class="clear-cart-btn text-red-600 hover:text-red-800 flex items-center space-x-1 transition cursor-pointer">
+                            <i class="fa-solid fa-trash-can text-[11px]"></i>
+                            <span>Αφαίρεση όλων</span>
+                        </button>
+                    </div>
+                `;
+
+                html += this.cart.map(item => {
                     const product = this.products.find(p => p.id === item.id);
                     if (!product) return '';
                     const title = product.name[currentLang] || product.name.en;
@@ -404,16 +441,21 @@ class AppController {
                     subtotal += itemTotal;
 
                     return `
-                        <div class="flex items-center space-x-4 border-b border-brand-200 pb-4">
-                            <img src="${product.image}" alt="${title}" class="w-16 h-16 object-cover rounded bg-brand-100">
+                        <div class="flex items-center space-x-4 border-b border-brand-200 pb-4 mb-4">
+                            <img src="${product.image}" alt="${title}" class="w-16 h-16 object-cover rounded bg-brand-100 flex-shrink-0">
                             <div class="flex-grow">
                                 <h4 class="font-serif text-sm font-medium text-brand-900">${title}</h4>
-                                <div class="text-xs text-stone-500">Qty: ${item.quantity}</div>
-                                <div class="font-serif text-sm font-semibold">${this.formatPrice(itemTotal)}</div>
+                                <div class="text-xs text-stone-500 mt-0.5">Qty: ${item.quantity}</div>
+                                <div class="font-serif text-sm font-semibold text-brand-900 mt-1">${this.formatPrice(itemTotal)}</div>
                             </div>
+                            <button class="remove-cart-item text-stone-400 hover:text-red-600 p-2 transition cursor-pointer" data-id="${product.id}" title="Remove item">
+                                <i class="fa-solid fa-trash-can text-sm"></i>
+                            </button>
                         </div>
                     `;
                 }).join('');
+
+                container.innerHTML = html;
             }
         }
 
