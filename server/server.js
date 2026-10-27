@@ -51,7 +51,7 @@ app.get('/api/health', (req, res) => {
     });
 });
 
-// 1. Stripe Checkout Endpoint (Dynamic Host Resolution)
+// 1. Stripe Checkout Endpoint
 app.post('/create-checkout-session', async (req, res) => {
     const { items, currency = 'eur' } = req.body;
 
@@ -154,14 +154,6 @@ app.post('/api/bespoke-inquiry', async (req, res) => {
     }
 });
 
-// Serve static assets first
-app.use(express.static(ROOT_DIR, { maxAge: '1d' }));
-
-// Explicit Root Route
-app.get('/', (req, res) => {
-    res.sendFile(path.join(ROOT_DIR, 'index.html'));
-});
-
 // Favicon Route Handler
 app.get('/favicon.ico', (req, res) => {
     const faviconPath = path.join(ROOT_DIR, 'favicon.ico');
@@ -172,14 +164,17 @@ app.get('/favicon.ico', (req, res) => {
     }
 });
 
-// Redirect direct /index.html requests to root while retaining query parameters
+// Redirect direct /index.html requests to root
 app.get('/index.html', (req, res) => {
     const queryString = req.url.includes('?') ? req.url.substring(req.url.indexOf('?')) : '';
     res.redirect(301, '/' + queryString);
 });
 
-// SPA Routing Fallback
-app.get('*', (req, res) => {
+// Serve static assets
+app.use(express.static(ROOT_DIR, { maxAge: '1d' }));
+
+// Express 5 compatible SPA fallback middleware
+app.use((req, res) => {
     res.sendFile(path.join(ROOT_DIR, 'index.html'));
 });
 
