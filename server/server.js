@@ -49,7 +49,7 @@ app.get('/api/health', (req, res) => {
     });
 });
 
-// Stripe Checkout Endpoint with Enhanced Price Diagnostics & Fallbacks
+// Stripe Checkout Endpoint
 app.post('/create-checkout-session', async (req, res) => {
     const { items, currency = 'eur' } = req.body;
     const origin = process.env.DOMAIN || `${req.protocol}://${req.get('host')}`;
@@ -61,7 +61,6 @@ app.post('/create-checkout-session', async (req, res) => {
     }
 
     const lineItems = items.map(item => {
-        // Look across all possible property names your frontend might use (price, cost, amount)
         const targetPriceVal = item.price !== undefined ? item.price : (item.cost !== undefined ? item.cost : item.amount);
         
         let rawPrice = 0;
@@ -73,7 +72,7 @@ app.post('/create-checkout-session', async (req, res) => {
 
         const unitAmount = Math.round((isNaN(rawPrice) ? 0 : rawPrice) * 100);
 
-        console.log(`📦 Item: "${item.name || 'Unknown'}" | Raw Price Property:`, targetPriceVal, `| Parsed Unit Amount (cents):`, unitAmount);
+        console.log(`📦 Item: "${item.name || 'Unknown'}" | Raw Price:`, targetPriceVal, `| Unit Amount (cents):`, unitAmount);
 
         const itemData = {
             price_data: {
@@ -81,8 +80,7 @@ app.post('/create-checkout-session', async (req, res) => {
                 product_data: {
                     name: item.name || 'Jewelry Item',
                 },
-                // Fallback to 1500 (€15.00) if price evaluates to 0 so checkout doesn't lock up with €0.00
-                unit_amount: unitAmount > 0 ? unitAmount : 1500, 
+                unit_amount: unitAmount > 0 ? unitAmount : 1500, // Fallback to 15.00 if missing
             },
             quantity: parseInt(item.qty || item.quantity || 1, 10),
         };
@@ -98,7 +96,7 @@ app.post('/create-checkout-session', async (req, res) => {
         const session = await stripe.checkout.sessions.create({
             line_items: lineItems,
             mode: 'payment',
-            payment_method_types: ['card'], // Explicitly forces standard card input fields
+            // payment_method_types removed to comply with latest Stripe API standards
             success_url: `${origin}/success.html?session_id={CHECKOUT_SESSION_ID}`,
             cancel_url: `${origin}/?canceled=true`,
         });
