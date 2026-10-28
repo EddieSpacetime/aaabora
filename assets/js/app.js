@@ -32,10 +32,10 @@ class AppController {
     }
 
     async init() {
+        this.setupIntroSplash(); // Initialize splash immediately so buttons work instantly
         await this.loadProductData();
         this.setupCurrencySelector();
         this.setupEventListeners();
-        this.setupIntroSplash();
         this.updateCartUI();
         this.updateWishlistUI();
         this.handleURLParameters();
@@ -46,14 +46,16 @@ class AppController {
         const video = document.getElementById('intro-video');
         const skipBtn = document.getElementById('skip-intro');
 
-        if (!splash || !video) return;
+        if (!splash) return;
 
+        // If user already saw intro this session, remove immediately
         if (sessionStorage.getItem('aabora_intro_seen')) {
             splash.remove();
             return;
         }
 
         const dismissSplash = () => {
+            if (!splash.parentNode) return;
             splash.classList.add('opacity-0', 'pointer-events-none');
             setTimeout(() => {
                 splash.remove();
@@ -61,9 +63,18 @@ class AppController {
             sessionStorage.setItem('aabora_intro_seen', 'true');
         };
 
-        video.addEventListener('ended', dismissSplash);
+        if (video) {
+            video.addEventListener('ended', dismissSplash);
+            video.play().catch(err => {
+                console.log("Autoplay blocked by browser policy, waiting for user interaction.", err);
+            });
+        }
+
         if (skipBtn) {
-            skipBtn.addEventListener('click', dismissSplash);
+            skipBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                dismissSplash();
+            });
         }
     }
 
