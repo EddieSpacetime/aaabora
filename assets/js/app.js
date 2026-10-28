@@ -48,11 +48,11 @@ class AppController {
 
         if (!splash) return;
 
-        // If user already saw intro this session, remove immediately
-        if (sessionStorage.getItem('aabora_intro_seen')) {
-            splash.remove();
-            return;
-        }
+        // Optional: comment this out temporarily during testing if you want it to show on every refresh
+        // if (sessionStorage.getItem('aabora_intro_seen')) {
+        //     splash.remove();
+        //     return;
+        // }
 
         const dismissSplash = () => {
             if (!splash.parentNode) return;
@@ -64,10 +64,11 @@ class AppController {
         };
 
         if (video) {
-            video.addEventListener('ended', dismissSplash);
+            video.load(); // Force browser to fetch the source stream
             video.play().catch(err => {
-                console.log("Autoplay blocked by browser policy, waiting for user interaction.", err);
+                console.log("Autoplay policy restricted auto-start:", err);
             });
+            video.addEventListener('ended', dismissSplash);
         }
 
         if (skipBtn) {
