@@ -35,9 +35,36 @@ class AppController {
         await this.loadProductData();
         this.setupCurrencySelector();
         this.setupEventListeners();
+        this.setupIntroSplash();
         this.updateCartUI();
         this.updateWishlistUI();
         this.handleURLParameters();
+    }
+
+    setupIntroSplash() {
+        const splash = document.getElementById('intro-splash');
+        const video = document.getElementById('intro-video');
+        const skipBtn = document.getElementById('skip-intro');
+
+        if (!splash || !video) return;
+
+        if (sessionStorage.getItem('aabora_intro_seen')) {
+            splash.remove();
+            return;
+        }
+
+        const dismissSplash = () => {
+            splash.classList.add('opacity-0', 'pointer-events-none');
+            setTimeout(() => {
+                splash.remove();
+            }, 700);
+            sessionStorage.setItem('aabora_intro_seen', 'true');
+        };
+
+        video.addEventListener('ended', dismissSplash);
+        if (skipBtn) {
+            skipBtn.addEventListener('click', dismissSplash);
+        }
     }
 
     setupCurrencySelector() {
@@ -142,7 +169,6 @@ class AppController {
             }
         });
 
-        // Bespoke Modal Handlers
         const openBespokeBtn = document.getElementById('open-bespoke-modal');
         const closeBespokeBtn = document.getElementById('close-bespoke-modal');
         const bespokeModal = document.getElementById('bespoke-modal');
@@ -200,7 +226,6 @@ class AppController {
             });
         }
 
-        // Quick View Handlers
         const qvModal = document.getElementById('quickview-modal');
         const closeQvBtn = document.getElementById('close-quickview-modal');
         const qvAddCartBtn = document.getElementById('qv-add-cart');
@@ -231,7 +256,6 @@ class AppController {
             });
         }
 
-        // Story Modal Handlers
         const openStoryBtn = document.getElementById('open-story-modal');
         const closeStoryBtn = document.getElementById('close-story-modal');
         const storyModal = document.getElementById('story-modal');
@@ -525,7 +549,7 @@ class AppController {
                 body: JSON.stringify({ 
                     items: checkoutItems,
                     currency: this.currentCurrency,
-                    lang: currentLang // 👈 Trilingual success handling
+                    lang: currentLang
                 })
             });
 

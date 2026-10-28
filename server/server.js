@@ -18,7 +18,6 @@ const stripe = require('stripe')(apiKey);
 
 const app = express();
 
-// Determine absolute project root folder dynamically
 const ROOT_DIR = fs.existsSync(path.join(__dirname, 'index.html'))
     ? __dirname
     : path.resolve(__dirname, '..');
@@ -27,7 +26,6 @@ const ROOT_DIR = fs.existsSync(path.join(__dirname, 'index.html'))
 app.get(['/success.html', '/success'], (req, res) => {
     const lang = (req.query.lang || 'el').toLowerCase();
 
-    // Localization Data Dictionary
     const content = {
         en: {
             title: 'Successful Order · Aabora',
@@ -114,13 +112,11 @@ app.get(['/success.html', '/success'], (req, res) => {
     `);
 });
 
-// Security Headers & Response Compression
 app.use(helmet({ contentSecurityPolicy: false }));
 app.use(compression());
 app.use(express.json());
 app.use(cors());
 
-// Configure Transporter for Nodemailer
 const transporter = nodemailer.createTransport({
     host: process.env.EMAIL_HOST || 'smtp.gmail.com',
     port: process.env.EMAIL_PORT || 587,
@@ -131,7 +127,6 @@ const transporter = nodemailer.createTransport({
     },
 });
 
-// Health Check Endpoint
 app.get('/api/health', (req, res) => {
     res.status(200).json({
         status: 'UP',
@@ -140,7 +135,6 @@ app.get('/api/health', (req, res) => {
     });
 });
 
-// Helper Function: Ensure Absolute HTTP/HTTPS URLs for Stripe
 function ensureAbsoluteUrl(rawUrl, baseUrl) {
     if (!rawUrl || typeof rawUrl !== 'string') return null;
     let trimmed = rawUrl.trim();
@@ -156,7 +150,6 @@ function ensureAbsoluteUrl(rawUrl, baseUrl) {
     return `${baseUrl}/${trimmed}`;
 }
 
-// Stripe Checkout Endpoint
 app.post('/create-checkout-session', async (req, res) => {
     const { items, currency = 'eur', lang = 'el' } = req.body;
     
@@ -222,7 +215,6 @@ app.post('/create-checkout-session', async (req, res) => {
     }
 });
 
-// Bespoke Inquiry API Endpoint
 app.post('/api/bespoke-inquiry', async (req, res) => {
     const { name, email, metal, budget, notes } = req.body;
 
@@ -284,7 +276,6 @@ app.post('/api/bespoke-inquiry', async (req, res) => {
     }
 });
 
-// Favicon Handler
 app.get('/favicon.ico', (req, res) => {
     const faviconPath = path.join(ROOT_DIR, 'favicon.ico');
     if (fs.existsSync(faviconPath)) {
@@ -293,21 +284,17 @@ app.get('/favicon.ico', (req, res) => {
     res.status(204).end();
 });
 
-// Redirect direct /index.html requests to root
 app.get('/index.html', (req, res) => {
     const queryString = req.url.includes('?') ? req.url.substring(req.url.indexOf('?')) : '';
     res.redirect(301, '/' + queryString);
 });
 
-// Serve static assets from Root Directory
 app.use(express.static(ROOT_DIR, { maxAge: '1d' }));
 
-// SPA Fallback Handler
 app.use((req, res) => {
     res.sendFile(path.join(ROOT_DIR, 'index.html'));
 });
 
-// Port Binding
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
     console.log(`Aabora server running on port ${PORT}`);

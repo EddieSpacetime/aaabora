@@ -39,7 +39,20 @@
     <link rel="stylesheet" href="assets/css/style.css">
 </head>
 <body class="bg-brand-50 text-brand-900 font-sans antialiased min-h-screen flex flex-col justify-between selection:bg-brand-200">
-
+		<!-- Intro Splash Screen Overlay -->
+		<div id="intro-splash" class="fixed inset-0 z-50 bg-stone-950 flex flex-col items-center justify-center transition-opacity duration-700">
+		<div class="relative w-full max-w-2xl px-4 text-center">
+        <!-- Intro Video -->
+        <video id="intro-video" autoplay muted playsinline class="w-full h-auto rounded-lg shadow-2xl object-cover max-h-[75vh]">
+            <source src="/assets/videos/intro.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+        <!-- Skip / Enter Button -->
+        <button id="skip-intro" class="mt-6 font-cinzel text-xs tracking-[0.3em] uppercase text-stone-300 border border-stone-600 px-8 py-3 rounded hover:bg-white hover:text-stone-950 transition duration-300 cursor-pointer">
+            Enter Atelier
+        </button>
+    </div>
+</div>
     <!-- Top Announcement Bar -->
     <div class="bg-brand-900 text-brand-50 text-[10px] uppercase tracking-widest py-2 text-center font-medium">
         <span data-i18n="announcement">Free Worldwide Shipping on Orders Over €150</span>
